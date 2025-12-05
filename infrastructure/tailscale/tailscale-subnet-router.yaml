@@ -1,0 +1,13 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: home-subnet-router
+  namespace: tailscale
+spec:
+  hostname: "talos-subnet-router"
+  # Add this if your tailscale ACLs require it (e.g., tag:k8s)
+  tags:
+    - "tag:k8s" 
+  subnetRouter:
+    advertiseRoutes:
+      - "10.0.1.0/24"

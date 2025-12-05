@@ -1,0 +1,32 @@
+global:
+  domain: argocd.jadogg.com # Helps Argo generate correct redirect links
+
+server:
+  # This tells Argo: "I am behind a Load Balancer that handles SSL. 
+  # Don't try to do SSL yourself."
+  extraArgs:
+    - --insecure
+
+  # Create the Ingress resource automatically (Cleaner than manual YAML!)
+  ingress:
+    enabled: true
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    ingressClassName: traefik
+    hosts:
+      - argocd.jadogg.com
+    tls:
+      - secretName: argocd-server-tls # The cert we created natively earlier
+        hosts:
+          - argocd.jadogg.com
+
+# Disable the internal TLS strictness so we don't need to restart pods on cert rotation
+configs:
+  params:
+    # These ensure Argo doesn't panic about self-signed certs internally
+    server.insecure: true 
+    repo.server.plaintext: false # Use default self-signed (encrypted but not verified)
+    dex.server.plaintext: false # Use default self-signed
+
+
+

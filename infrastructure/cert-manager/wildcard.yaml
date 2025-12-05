@@ -1,0 +1,15 @@
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jadogg-wildcard
+  namespace: traefik # Store it where Traefik lives
+spec:
+  secretName: jadogg-wildcard-cert # This is the secret name referenced in Traefik config
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: "*.jadogg.com"
+  dnsNames:
+  - "jadogg.com"
+  - "*.jadogg.com"

@@ -1,0 +1,54 @@
+# 1. MetalLB Integration
+service:
+  annotations:
+    metallb.io/loadBalancerIPs: 10.0.1.150
+  spec:
+    externalTrafficPolicy: Local
+
+# 2. Make Traefik the Default
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+# 3. Define Ports (UPDATED for Chart v34+)
+ports:
+  web:
+    port: 8000
+    expose:
+      default: true
+    exposedPort: 80
+    # NEW SYNTAX: "redirectTo" is replaced by this block
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+  websecure:
+    port: 8443
+    expose:
+      default: true
+    exposedPort: 443
+    # TLS configuration remains here
+    tls:
+      enabled: true
+
+# 4. Logs/Persistence
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  path: /data
+
+# 5. Security Context
+securityContext:
+  capabilities:
+    drop: [ALL]
+  readOnlyRootFilesystem: true
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+
+# 6 issues with the storage option.
+deployment:
+  # This prevents the ReadWriteOnce deadlock
+  type: Recreate

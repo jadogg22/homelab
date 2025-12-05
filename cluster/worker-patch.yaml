@@ -1,0 +1,17 @@
+# workers are different machines and so we need to make some ajustments to the files
+machine:
+  install:
+    disk: /dev/sda       # Assume workers also use NVMe? Check with 'get disks' if unsure!
+    wipe: true
+    # THIS IS A DIFFERENT ID, added intel microcode and iscsi stuff 
+    image: factory.talos.dev/installer/7f0b29f62a66a3214fb4eb2d9c4d3f3659bc25227881ad9c16731ba5af2c2631:v1.11.5
+  network:
+    interfaces:
+      - interface: eno1  # Verify this interface name on workers too!
+        dhcp: false
+        addresses:
+          - 10.0.1.103/16    # <--- CHANGE THIS for each worker (e.g., .102, .103)
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.0.1.1
+

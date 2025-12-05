@@ -1,0 +1,40 @@
+#pihole-dns-lb.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: pihole
+  name: pihole-dns-tcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+spec:
+  selector:
+    app: pihole
+  type: LoadBalancer
+  loadBalancerIP: 10.0.1.151
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: dns-tcp
+      port: 53
+      targetPort: 53
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: pihole
+  name: pihole-dns-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+spec:
+  selector:
+    app: pihole
+  type: LoadBalancer
+  loadBalancerIP: 10.0.1.151
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: dns-udp
+      port: 53
+      targetPort: 53
+      protocol: UDP
+

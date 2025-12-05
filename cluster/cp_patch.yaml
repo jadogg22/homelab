@@ -1,0 +1,34 @@
+machine:
+  # 1. INSTALL (Wipe NVMe + Use Custom Image)
+  install:
+    disk: /dev/nvme0n1
+    wipe: true
+    image: factory.talos.dev/metal-installer/03e5c3b9876b7960d04ee705ffc4cb0991c7cc2604c54436543cd5dc4695f83a:v1.11.5
+
+  # 5 when hosting on a controlplane we arn't anouncing some ip's from metal lb
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers: null
+
+  # 2. NETWORK (Static IP)
+  network:
+    interfaces:
+      - interface: enp1s0f0
+        dhcp: false
+        addresses:
+          - 10.0.1.101/16
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.0.0.1
+
+  # 4. KUBELET (Allow Longhorn to manage mounts correctly)
+  kubelet:
+    extraMounts:
+      - destination: /var/lib/longhorn
+        type: bind
+        source: /var/lib/longhorn
+        options:
+          - bind
+          - rshared
+          - rw
+
+

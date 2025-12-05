@@ -1,0 +1,44 @@
+# 1. Configure the Web Interface (Ingress)
+serviceWeb:
+  type: ClusterIP
+  
+# 2. Configure DNS (The MetalLB part!)
+serviceDns:
+  enabled: true
+  type: LoadBalancer
+  loadBalancerIP: "10.0.1.151"
+  externalTrafficPolicy: Cluster # Matches your manual config
+  annotations:
+    # This allows both TCP and UDP services to share the same IP
+    metallb.universe.tf/allow-shared-ip: "pihole"
+
+# 3. Persistence
+persistentVolumeClaim:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 500Mi
+
+# 4. Ingress (Secure Dashboard)
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - pihole.jadogg.com
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - pihole.jadogg.com
+
+# 5. Resources / Admin
+admin:
+  existingSecret: "pihole-admin-password"
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure # Only allow access via HTTPS
+  routes:
+    - match: Host(`traefik.jadogg.com`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+  tls:
+    secretName: jadogg-wildcard-cert # <--- This links the cert we made earlier!

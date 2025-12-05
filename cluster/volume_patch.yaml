@@ -1,0 +1,10 @@
+apiVersion: v1alpha1
+kind: VolumeConfig
+metadata:
+  name: sdb                # This will create /var/mnt/sdb
+  namespace: runtime
+spec:
+  provisioning:
+    diskSelector:
+      match: disk.wwid == 'naa.5000c5008bab6a41'
+'

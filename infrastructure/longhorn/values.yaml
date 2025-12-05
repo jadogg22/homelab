@@ -1,0 +1,28 @@
+# 1. Storage Settings (Good defaults for Homelab)
+defaultSettings:
+  defaultReplicaCount: 1 # Saves disk space (1 copy instead of 3)
+
+persistence:
+  reclaimPolicy: Retain
+  defaultClassReplicaCount: 1
+
+# 2. Ingress Configuration
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  
+  # Change to your public domain
+  host: longhorn.jadogg.com
+  
+  # Enable TLS using the secret we just copied
+  tls: true
+  tlsSecret: jadogg-wildcard-cert
+  
+  annotations:
+    # Force HTTPS
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    
+    # Optional: Basic Auth (Highy Recommended for Longhorn!)
+    # Since Longhorn has NO login screen by default, anyone on your Tailnet 
+    # can delete your volumes. Uncomment this if you made a middleware user earlier.
+    # traefik.ingress.kubernetes.io/router.middlewares: traefik-basic-auth@kubernetescrd
