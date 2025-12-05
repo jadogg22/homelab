@@ -1,0 +1,9 @@
+# Sensitive configuration files
+talosconfig
+*.kubeconfig
+
+# Sensitive Talos node configurations
+cluster/controlplane.yaml
+cluster/worker.yaml
+cluster/talosconfig
+
