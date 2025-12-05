@@ -9,3 +9,11 @@ cluster/talosconfig
 
 .sops.yaml
 
+# --- OS / IDE Junk ---
+.DS_Store
+.idea/
+.vscode/
+
+# Ignore local kubeseal public key
+pub-sealed-secrets.pem
+
