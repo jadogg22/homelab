@@ -1,0 +1,17 @@
+# infrastructure/minio/values.yaml
+
+replicas: 1
+
+persistence:
+  enabled: true
+  storageClass: longhorn-replicated # use replication (2) 
+  size: 25Gi
+  accessMode: ReadWriteOnce
+
+existingSecret: minio-creds  # use secrets 
+rootUser: "" 
+rootPassword: ""
+
+resources:
+  requests:
+    memory: 512Mi
