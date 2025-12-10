@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://jameswynn.github.io/helm-charts
     chart: homepage
-    targetRevision: 3.4.0
+    targetRevision: ~3
     
     helm:
       valueFiles:
@@ -23,7 +23,7 @@ spec:
   sources:
     - repoURL: https://jameswynn.github.io/helm-charts
       chart: homepage
-      targetRevision: 3.4.0
+      targetRevision: ~3
       helm:
         valueFiles:
           - $values/charts/homepage/values.yaml # Reference to the secondary source below

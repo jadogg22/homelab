@@ -1,11 +1,9 @@
 # infrastructure/minio/values.yaml
 
-# 1. FORCE STANDALONE MODE
-mode: standalone
 
 persistence:
   enabled: true
-  storageClass: longhorn-replicated # use replication (2) 
+  storageClass: longhorn # use replication (2) 
   size: 25Gi
   accessMode: ReadWriteOnce
 
