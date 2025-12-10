@@ -17,7 +17,6 @@ ingress:
       - secretName: jadogg-wildcard-cert
         hosts:
           - home.jadogg.com
-
 # 2. Permissions (Required for K8s widget)
 serviceAccount:
   create: true
@@ -54,3 +53,8 @@ config:
             icon: pi-hole.png
             href: https://pihole.jadogg.com
             description: DNS Blocker
+
+env:
+  HOMEPAGE_ALLOWED_HOSTS: "home.jadogg.com"
+
+
