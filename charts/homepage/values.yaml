@@ -1,20 +1,22 @@
 # values.yaml
 
 # 1. Access & Security
+# Ingress Configuration
 ingress:
-  enabled: true
-  ingressClassName: traefik
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-  hosts:
-    - host: home.jadogg.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
-        - home.jadogg.com
+  main: 
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: home.jadogg.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - home.jadogg.com
 
 # 2. Permissions (Required for K8s widget)
 serviceAccount:
