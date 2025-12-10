@@ -1,6 +1,7 @@
 # infrastructure/minio/values.yaml
 
-replicas: 1
+# 1. FORCE STANDALONE MODE
+mode: standalone
 
 persistence:
   enabled: true
