@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://jameswynn.github.io/helm-charts
+    chart: homepage
+    targetRevision: 3.4.0
+    
+    helm:
+      valueFiles:
+        - values.yaml
+  
+  # This trick allows us to pull the chart from the official repo
+  # BUT pull the values.yaml from YOUR git repo.
+  # We use 'sources' (plural) to combine them.
+  sources:
+    - repoURL: https://jameswynn.github.io/helm-charts
+      chart: homepage
+      targetRevision: 3.4.0
+      helm:
+        valueFiles:
+          - $values/charts/homepage/values.yaml # Reference to the secondary source below
+
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: HEAD
+      ref: values # This creates a reference name "$values" to use above
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

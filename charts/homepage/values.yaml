@@ -1,0 +1,54 @@
+# values.yaml
+
+# 1. Access & Security
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: home.jadogg.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - home.jadogg.com
+
+# 2. Permissions (Required for K8s widget)
+serviceAccount:
+  create: true
+  name: homepage
+rbac:
+  create: true
+
+# 3. Dashboard Layout
+config:
+  settings:
+    title: Jadogg Lab
+    layout:
+      Networking:
+        style: row
+        columns: 4
+  
+  widgets:
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+    - search:
+        provider: duckduckgo
+        target: _blank
+
+  services:
+    - Networking:
+        - Pi-hole:
+            icon: pi-hole.png
+            href: https://pihole.jadogg.com
+            description: DNS Blocker
