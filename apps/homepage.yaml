@@ -8,29 +8,20 @@ metadata:
 spec:
   project: default
   
-  source:
-    repoURL: https://jameswynn.github.io/helm-charts
-    chart: homepage
-    targetRevision: ~3
-    
-    helm:
-      valueFiles:
-        - values.yaml
-  
-  # This trick allows us to pull the chart from the official repo
-  # BUT pull the values.yaml from YOUR git repo.
-  # We use 'sources' (plural) to combine them.
+  # Multi-Source: Combines the chart from the public repo with your config from Git
   sources:
+    # Source 1: The official chart
     - repoURL: https://jameswynn.github.io/helm-charts
       chart: homepage
-      targetRevision: ~3
+      targetRevision: 2.1.0  
       helm:
         valueFiles:
           - $values/charts/homepage/values.yaml # Reference to the secondary source below
 
+     #my repo
     - repoURL: https://github.com/jadogg22/homelab.git
-      targetRevision: HEAD
-      ref: values # This creates a reference name "$values" to use above
+      targetRevision: main
+      ref: values # Reference name used in Source 1
 
   destination:
     server: https://kubernetes.default.svc
