@@ -17,3 +17,6 @@ cluster/talosconfig
 # Ignore local kubeseal public key
 pub-sealed-secrets.pem
 
+help/
+secrets/
+
