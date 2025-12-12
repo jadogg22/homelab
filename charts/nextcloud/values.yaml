@@ -6,49 +6,17 @@ mariadb:
   auth:
     username: nextcloud
     database: nextcloud
-    
-    # We tell Nextcloud's chart to use the passwords from the secrets
     existingSecret: nextcloud-secrets
+    passwordKey: mariadb-password
     rootPasswordKey: mariadb-root-password
-    passwordKey: mariadb-password # MariaDB user password
 
-# charts/nextcloud/values.yaml
-
-# ... (mariadb: and nextcloud:host/username/existingSecret blocks remain correct) ...
-
-# 2. Nextcloud Application Settings
 nextcloud:
   host: "nextcloud.jadogg.com"
   username: "admin"
-  
-  # Admin Password (Uses secret for Nextcloud app login)
   existingSecret:
     enabled: true
-    secretName: nextcloud-secrets # Your Secret Name
+    secretName: nextcloud-secrets
     passwordKey: nextcloud-admin-password
-    
-  # --- CRITICAL FIX FOR ERROR 1045 ---
-  database:
-    type: mariadb
-    host: nextcloud-mariadb # Service name provided by the Helm chart
-    name: nextcloud
-    user: nextcloud
-    
-    # This block *should* be enough for the application, but we need to ensure the Init Container uses it too.
-    existingSecret: nextcloud-secrets
-    secretPasswordKey: mariadb-password 
-
-  # --- **NEW: FIXING THE INIT CONTAINER SECRET NAME** ---
-  # The Init Container is likely using legacy/hardcoded variables.
-  # We need to tell the chart to use our secret for the Init script variables.
-  initContainers:
-    enabled: true
-    initScripts:
-      db:
-        secretName: nextcloud-secrets # Change the secret name used by Init scripts
-        secretKey: mariadb-password   # Change the key used by Init scripts
-        # NOTE: The exact keys here are chart-dependent. If the above fails, 
-        # we will use the 'externalDatabase' block's secret.
     
 # 3. Persistence and Ingress (No changes)
 persistence:
