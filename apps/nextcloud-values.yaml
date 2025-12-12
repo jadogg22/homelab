@@ -8,26 +8,23 @@ metadata:
 spec:
   project: default
   
-  # Multi-Source: Combines the chart from the public Bitnami repo with your config from Git
   sources:
-    # Source 1: The official Nextcloud chart repository
-    - repoURL: https://nextcloud.github.io/helm/ # <--- UPDATED REPO URL
+    # Source 1: Official Nextcloud Chart
+    - repoURL: https://nextcloud.github.io/helm/
       chart: nextcloud
-      targetRevision: 8.6.0 # <--- UPDATED TO LATEST VERSION
+      targetRevision: 8.6.0
       helm:
         valueFiles:
           - $values/charts/nextcloud/values.yaml
 
-     #my repo
-    -h repoURL: https://github.com/jadogg22/homelab.git
+    # Source 2: Your Values (Fixed the typo here)
+    - repoURL: https://github.com/jadogg22/homelab.git
       targetRevision: main
-      ref: values # Reference name used in Source 1
-
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: default # Deploy Nextcloud components here
-
+    namespace: default
   syncPolicy:
     automated:
       prune: true

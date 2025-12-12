@@ -55,4 +55,54 @@ ingress:
   tls:
     - secretName: jadogg-wildcard-cert
       hosts:
+ # 1. DISABLE the embedded database (We use our own external one)
+mariadb:
+  enabled: false
+
+# 2. Configure External Database Connection
+externalDatabase:
+  enabled: true
+  type: mysql
+  host: mariadb.default.svc.cluster.local
+  database: nextcloud
+  user: nextcloud
+  existingSecret:
+    enabled: true
+    secretName: mariadb-secrets   # The sealed secret we fixed earlier
+    usernameKey: nextcloud-user   # (Optional if you didn't set this key, defaults are fine)
+    passwordKey: mariadb-password # MUST match the key in your mariadb-secrets
+
+# 3. Nextcloud Admin User (Web Login)
+nextcloud:
+  host: "nextcloud.jadogg.com"
+  username: "admin"
+  password: "" # Leave empty, we use the secret below
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-secrets # The new secret for the web UI admin
+    passwordKey: nextcloud-admin-password
+
+# 4. Persistence
+persistence:
+  enabled: true
+  size: 20Gi
+  storageClass: longhorn
+  accessMode: ReadWriteOnce
+
+# 5. Ingress (Formatted for the Official Nextcloud Chart)
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  # TLS Configuration
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
         - nextcloud.jadogg.com
+  # Host Configuration
+  hosts:
+    - host: nextcloud.jadogg.com
+      paths:
+        - path: /
+          pathType: Prefix       - nextcloud.jadogg.com
