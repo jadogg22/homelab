@@ -1,14 +1,10 @@
 auth:
-  rootPassword: 
-    existingSecret: mariadb-secrets
-    key: root-password
+  existingSecret: mariadb-secrets   # name of the secret
+  existingSecretPasswordKey: nextcloud-password   # key in the secret for the user password
+  existingSecretRootPasswordKey: root-password   # key in the secret for root
+  username: nextcloud
   database: nextcloud
-  username: 
-    existingSecret: mariadb-secrets
-    key: nextcloud-user
-  password: 
-    existingSecret: mariadb-secrets
-    key: nextcloud-password
+
 
 primary:
   persistence:
