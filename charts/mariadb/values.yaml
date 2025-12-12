@@ -12,8 +12,8 @@ primary:
     size: 20Gi                   # adjust based on needs
     storageClass: longhorn       # your SC for persistence
 
-service:
-  type: LoadBalancer
-  port: 3306
-  nodePort: null
-  loadBalancerIP: 10.0.1.159     
+  service:
+    type: LoadBalancer
+    loadBalancerIP: 10.0.1.159
+    ports:
+      mysql: 3306  # Explicitly naming the port is safer with Bitnami
