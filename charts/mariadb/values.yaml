@@ -1,0 +1,23 @@
+auth:
+  rootPassword: 
+    existingSecret: mariadb-secrets
+    key: root-password
+  database: nextcloud
+  username: 
+    existingSecret: mariadb-secrets
+    key: nextcloud-user
+  password: 
+    existingSecret: mariadb-secrets
+    key: nextcloud-password
+
+primary:
+  persistence:
+    enabled: true
+    size: 20Gi                   # adjust based on needs
+    storageClass: longhorn       # your SC for persistence
+
+service:
+  type: LoadBalancer
+  port: 3306
+  nodePort: null
+  loadBalancerIP: 10.0.1.159     
