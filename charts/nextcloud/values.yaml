@@ -1,65 +1,8 @@
-# charts/nextcloud/values.yaml
-
-# 1. Database Configuration (MariaDB subchart)
-mariadb:
-  enabled: true
-  auth:
-    username: nextcloud
-    database: nextcloud
-    existingSecret: nextcloud-secrets      # Secret that contains mariadb-password and mariadb-root-password
-    passwordKey: mariadb-password          # Password for the 'nextcloud' DB user
-    rootPasswordKey: mariadb-root-password # Root password
-
-# 2. Nextcloud Application Settings
-nextcloud:
-  host: "nextcloud.jadogg.com"
-  username: "admin"
-  
-  # Admin password from secret
-  existingSecret:
-    enabled: true
-    secretName: nextcloud-secrets
-    passwordKey: nextcloud-admin-password
-
-  # Database config (points to the same MariaDB service)
-  database:
-    type: mariadb
-    host: nextcloud-mariadb
-    name: nextcloud
-    user: nextcloud
-    existingSecret: nextcloud-secrets
-    secretPasswordKey: mariadb-password
-
-  # Init container ensures DB is ready before Nextcloud starts
-  initContainers:
-    enabled: true
-    initScripts:
-      db:
-        secretName: nextcloud-secrets
-        secretKey: mariadb-password
-
-# 3. Persistence
-persistence:
-  enabled: true
-  size: 20Gi
-  storageClass: longhorn-replicated
-
-# 4. Ingress
-ingress:
-  enabled: true
-  className: traefik
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-  hosts:
-    - host: nextcloud.jadogg.com
-  tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
- # 1. DISABLE the embedded database (We use our own external one)
+# 1. DISABLE embedded DB
 mariadb:
   enabled: false
 
-# 2. Configure External Database Connection
+# 2. Fix Database Connection (Use MariaDB!)
 externalDatabase:
   enabled: true
   type: mysql
@@ -68,19 +11,34 @@ externalDatabase:
   user: nextcloud
   existingSecret:
     enabled: true
-    secretName: mariadb-secrets   # The sealed secret we fixed earlier
-    usernameKey: nextcloud-user   # (Optional if you didn't set this key, defaults are fine)
-    passwordKey: mariadb-password # MUST match the key in your mariadb-secrets
+    secretName: mariadb-secrets
+    passwordKey: mariadb-password # Matches your sealed secret
 
-# 3. Nextcloud Admin User (Web Login)
+# 3. Admin Login
 nextcloud:
   host: "nextcloud.jadogg.com"
   username: "admin"
-  password: "" # Leave empty, we use the secret below
+  password: ""
   existingSecret:
     enabled: true
-    secretName: nextcloud-secrets # The new secret for the web UI admin
+    secretName: nextcloud-secrets
     passwordKey: nextcloud-admin-password
+
+  # --- FIX FOR LOGIN LOOP STARTS HERE ---
+  # This tells Nextcloud it's behind a proxy and forces HTTPS
+  configs:
+    proxy.config.php: |-
+      <?php
+      $CONFIG = array (
+        'trusted_proxies' => array(
+          0 => '10.0.0.0/8',      # Trust K8s/Traefik internal IPs
+          1 => '172.16.0.0/12',
+          2 => '192.168.0.0/16',
+        ),
+        'overwriteprotocol' => 'https',
+        'overwrite.cli.url' => 'https://nextcloud.jadogg.com',
+        'overwritehost' => 'nextcloud.jadogg.com',
+      );
 
 # 4. Persistence
 persistence:
@@ -89,20 +47,18 @@ persistence:
   storageClass: longhorn
   accessMode: ReadWriteOnce
 
-# 5. Ingress (Formatted for the Official Nextcloud Chart)
+# 5. Ingress
 ingress:
   enabled: true
   className: traefik
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-  # TLS Configuration
   tls:
     - secretName: jadogg-wildcard-cert
       hosts:
         - nextcloud.jadogg.com
-  # Host Configuration
   hosts:
     - host: nextcloud.jadogg.com
       paths:
         - path: /
-          pathType: Prefix       - nextcloud.jadogg.com
+          pathType: Prefix
