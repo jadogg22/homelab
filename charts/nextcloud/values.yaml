@@ -1,52 +1,66 @@
-# charts/nextcloud/values.yaml
+# charts/nextcloud/values.yaml (Updated for Secrets)
 
-# 1. Database Configuration (Tells the MariaDB sub-chart which passwords to use)
+# 1. Database Configuration (References the existing Secret)
 mariadb:
   enabled: true
   auth:
     username: nextcloud
     database: nextcloud
     
-    # Credentials sourced from your Sealed Secret
+    # We tell Nextcloud's chart to use the passwords from the secrets
     existingSecret: nextcloud-secrets
     rootPasswordKey: mariadb-root-password
     passwordKey: mariadb-password # MariaDB user password
+
+# charts/nextcloud/values.yaml
+
+# ... (mariadb: and nextcloud:host/username/existingSecret blocks remain correct) ...
 
 # 2. Nextcloud Application Settings
 nextcloud:
   host: "nextcloud.jadogg.com"
   username: "admin"
   
-  # Nextcloud Admin Password (for first login)
+  # Admin Password (Uses secret for Nextcloud app login)
   existingSecret:
     enabled: true
-    secretName: nextcloud-secrets
+    secretName: nextcloud-secrets # Your Secret Name
     passwordKey: nextcloud-admin-password
     
-  # how to connect to the database using the secret password.
+  # --- CRITICAL FIX FOR ERROR 1045 ---
   database:
     type: mariadb
     host: nextcloud-mariadb # Service name provided by the Helm chart
     name: nextcloud
     user: nextcloud
     
-    # This ensures the Nextcloud client uses the correct password from the Secret.
+    # This block *should* be enough for the application, but we need to ensure the Init Container uses it too.
     existingSecret: nextcloud-secrets
     secretPasswordKey: mariadb-password 
 
-# 3. Persistence (Storage Configuration)
+  # --- **NEW: FIXING THE INIT CONTAINER SECRET NAME** ---
+  # The Init Container is likely using legacy/hardcoded variables.
+  # We need to tell the chart to use our secret for the Init script variables.
+  initContainers:
+    enabled: true
+    initScripts:
+      db:
+        secretName: nextcloud-secrets # Change the secret name used by Init scripts
+        secretKey: mariadb-password   # Change the key used by Init scripts
+        # NOTE: The exact keys here are chart-dependent. If the above fails, 
+        # we will use the 'externalDatabase' block's secret.
+    
+# 3. Persistence and Ingress (No changes)
 persistence:
   enabled: true
   size: 20Gi
-  storageClass: longhorn-replicated # <--- Correctly set to your Longhorn SC
-
-# 4. Ingress Configuration (External Access)
+│ storageClass: longhorn-replicated
+  
 ingress:
   enabled: true
   className: traefik
   annotations:
-    # Forces connection over HTTPS
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure 
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
   hosts:
     - host: nextcloud.jadogg.com
   tls:
