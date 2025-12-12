@@ -27,6 +27,7 @@ nextcloud:
 persistence:
   enabled: true
   size: 20Gi
+│ storageClass: longhorn-replicated
   
 ingress:
   enabled: true
