@@ -1,0 +1,41 @@
+# charts/nextcloud/values.yaml (Updated for Secrets)
+
+# 1. Database Configuration (References the existing Secret)
+mariadb:
+  enabled: true
+  auth:
+    username: nextcloud
+    database: nextcloud
+    
+    # We tell Nextcloud's chart to use the passwords from the secrets
+    existingSecret: nextcloud-secrets
+    rootPasswordKey: mariadb-root-password
+    passwordKey: mariadb-password # MariaDB user password
+
+# 2. Nextcloud Application Settings (References the existing Secret)
+nextcloud:
+  host: "nextcloud.jadogg.com"
+  username: "admin"
+  
+  # New block to reference the admin password from the Secret
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-secrets
+    passwordKey: nextcloud-admin-password
+    
+# 3. Persistence and Ingress (No changes)
+persistence:
+  enabled: true
+  size: 20Gi
+  
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: nextcloud.jadogg.com
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - nextcloud.jadogg.com
