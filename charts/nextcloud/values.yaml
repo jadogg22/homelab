@@ -1,29 +1,50 @@
-# charts/nextcloud/values.yaml (Updated for Secrets)
+# charts/nextcloud/values.yaml
 
-# 1. Database Configuration (References the existing Secret)
+# 1. Database Configuration (MariaDB subchart)
 mariadb:
   enabled: true
   auth:
     username: nextcloud
     database: nextcloud
-    existingSecret: nextcloud-secrets
-    passwordKey: mariadb-password
-    rootPasswordKey: mariadb-root-password
+    existingSecret: nextcloud-secrets      # Secret that contains mariadb-password and mariadb-root-password
+    passwordKey: mariadb-password          # Password for the 'nextcloud' DB user
+    rootPasswordKey: mariadb-root-password # Root password
 
+# 2. Nextcloud Application Settings
 nextcloud:
   host: "nextcloud.jadogg.com"
   username: "admin"
+  
+  # Admin password from secret
   existingSecret:
     enabled: true
     secretName: nextcloud-secrets
     passwordKey: nextcloud-admin-password
-    
-# 3. Persistence and Ingress (No changes)
+
+  # Database config (points to the same MariaDB service)
+  database:
+    type: mariadb
+    host: nextcloud-mariadb
+    name: nextcloud
+    user: nextcloud
+    existingSecret: nextcloud-secrets
+    secretPasswordKey: mariadb-password
+
+  # Init container ensures DB is ready before Nextcloud starts
+  initContainers:
+    enabled: true
+    initScripts:
+      db:
+        secretName: nextcloud-secrets
+        secretKey: mariadb-password
+
+# 3. Persistence
 persistence:
   enabled: true
   size: 20Gi
-│ storageClass: longhorn-replicated
-  
+  storageClass: longhorn-replicated
+
+# 4. Ingress
 ingress:
   enabled: true
   className: traefik
