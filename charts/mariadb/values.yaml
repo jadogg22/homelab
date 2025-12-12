@@ -1,8 +1,8 @@
 
 auth:
   existingSecret: mariadb-secrets
-  existingSecretRootPasswordKey: root-password
-  existingSecretPasswordKey: nextcloud-password
+  existingSecretRootPasswordKey: mariadb-root-password # The key that's failing
+  existingSecretPasswordKey: nextcloud-password       # A key for the Nextcloud user
   username: nextcloud
   database: nextcloud
 
