@@ -8,7 +8,7 @@ spec:
   sources:
     - repoURL: https://charts.bitnami.com/bitnami
       chart: mariadb
-      targetRevision: 13.7.6
+      targetRevision: 24.0.1
       helm:
         valueFiles:
           - $values/charts/mariadb/values.yaml
