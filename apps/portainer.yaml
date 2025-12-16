@@ -1,0 +1,36 @@
+#app/porteiner.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portainer
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  sources:
+    # Source 1: Official Portainer Chart
+    - repoURL: https://portainer.github.io/k8s/
+      chart: portainer
+      targetRevision: 2.33.5 # Current stable version
+      helm:
+        valueFiles:
+          - $values/charts/portainer/values.yaml
+
+    # Source 2: Your Git Repo
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: HEAD
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portainer
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,27 @@
+# charts/portainer/values.yaml
+
+# 1. Service Type
+# We use ClusterIP because Traefik (Ingress) will handle the external access
+service:
+  type: ClusterIP
+
+# 2. Ingress (The Web UI)
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - host: portainer.jadogg.com
+      paths:
+        - path: /
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - portainer.jadogg.com
+
+# 3. Persistence (Don't lose your admin password/settings)
+persistence:
+  enabled: true
+  size: 10Gi
+  accessMode: ReadWriteOnce
