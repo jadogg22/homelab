@@ -1,0 +1,43 @@
+
+env:
+  TZ: America/Denver
+
+persistence:
+  config:
+    enabled: true
+    size: 1Gi
+    storageClass: longhorn
+  data:
+    enabled: true
+    size: 5Gi
+    storageClass: longhorn
+
+service:
+  dns-tcp:
+    enabled: true
+    type: LoadBalancer
+    loadBalancerIP: 10.0.1.151
+    externalTrafficPolicy: Cluster
+  dns-udp:
+    enabled: true
+    type: LoadBalancer
+    loadBalancerIP: 10.0.1.151
+    externalTrafficPolicy: Cluster
+
+
+ingress:
+  main:
+    enabled: true
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: adguard.jadogg.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - adguard.jadogg.com
+
