@@ -1,4 +1,3 @@
-
 env:
   TZ: America/Denver
 
@@ -21,12 +20,17 @@ service:
     type: LoadBalancer
     loadBalancerIP: 10.0.1.151
     externalTrafficPolicy: Cluster
+
   dns-udp:
     enabled: true
     type: LoadBalancer
     loadBalancerIP: 10.0.1.151
     externalTrafficPolicy: Cluster
 
+  main:
+    ports:
+      http:
+        port: 80
 
 ingress:
   main:
@@ -44,27 +48,30 @@ ingress:
         hosts:
           - adguard.jadogg.com
 
+controllers:
+  main:
+    containers:
+      main:
+        probes:
+          startup:
+            enabled: true
+            spec:
+              tcpSocket:
+                port: 80
+              initialDelaySeconds: 30
+              periodSeconds: 5
+              failureThreshold: 60
 
-probes:
-  startup:
-    enabled: true
-    spec:
-      tcpSocket:
-        port: 80
-      initialDelaySeconds: 30
-      periodSeconds: 5
-      failureThreshold: 60
+          readiness:
+            enabled: true
+            spec:
+              tcpSocket:
+                port: 80
+              periodSeconds: 10
 
-  readiness:
-    enabled: true
-    spec:
-      tcpSocket:
-        port: 80
-      periodSeconds: 10
-
-  liveness:
-    enabled: true
-    spec:
-      tcpSocket:
-        port: 80
-      periodSeconds: 10
+          liveness:
+            enabled: true
+            spec:
+              tcpSocket:
+                port: 80
+              periodSeconds: 10
