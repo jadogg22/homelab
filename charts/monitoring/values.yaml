@@ -1,0 +1,72 @@
+# values.yaml
+namespace: monitoring
+
+# Grafana
+grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - grafana.jadogg.com
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - grafana.jadogg.com
+  persistence:
+    enabled: true
+    storageClassName: longhorn
+    size: 5Gi
+
+# Prometheus
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector: {}
+    retention: 15d
+    resources:
+      requests:
+        memory: 2Gi
+        cpu: 500m
+    volumeClaimTemplate:
+      spec:
+        storageClassName: longhorn
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+
+# Alertmanager
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    replicas: 1
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+    volumeClaimTemplate:
+      spec:
+        storageClassName: longhorn
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+
+# Disable unneeded exporters if you want lighter footprint
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+# Optional: enable Prometheus Operator admission webhooks with cert-manager
+prometheusOperator:
+  admissionWebhooks:
+    certManager:
+      enabled: true
+
