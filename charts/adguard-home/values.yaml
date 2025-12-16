@@ -5,12 +5,15 @@ env:
 persistence:
   config:
     enabled: true
-    size: 1Gi
     storageClass: longhorn
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
   data:
     enabled: true
-    size: 5Gi
     storageClass: longhorn
+    size: 5Gi
+    accessMode: ReadWriteOnce
 
 service:
   dns-tcp:
