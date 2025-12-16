@@ -50,7 +50,21 @@ probes:
     enabled: true
     spec:
       tcpSocket:
-        port: 3000
-      initialDelaySeconds: 60
+        port: 80
+      initialDelaySeconds: 30
       periodSeconds: 5
       failureThreshold: 60
+
+  readiness:
+    enabled: true
+    spec:
+      tcpSocket:
+        port: 80
+      periodSeconds: 10
+
+  liveness:
+    enabled: true
+    spec:
+      tcpSocket:
+        port: 80
+      periodSeconds: 10
