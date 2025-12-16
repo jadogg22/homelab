@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mariadb
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: mariadb
+      targetRevision: 24.0.1
+      helm:
+        valueFiles:
+          - $values/charts/mariadb/values.yaml
+
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: main
+      ref: values # Reference name used in Source 1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

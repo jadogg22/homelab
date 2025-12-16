@@ -1,0 +1,64 @@
+# 1. DISABLE embedded DB
+mariadb:
+  enabled: false
+
+# 2. Fix Database Connection (Use MariaDB!)
+externalDatabase:
+  enabled: true
+  type: mysql
+  host: mariadb.default.svc.cluster.local
+  database: nextcloud
+  user: nextcloud
+  existingSecret:
+    enabled: true
+    secretName: mariadb-secrets
+    passwordKey: mariadb-password # Matches your sealed secret
+
+# 3. Admin Login
+nextcloud:
+  host: "nextcloud.jadogg.com"
+  username: "admin"
+  password: ""
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-secrets
+    passwordKey: nextcloud-admin-password
+
+  # --- FIX FOR LOGIN LOOP STARTS HERE ---
+  # This tells Nextcloud it's behind a proxy and forces HTTPS
+  configs:
+    proxy.config.php: |-
+      <?php
+      $CONFIG = array (
+        'trusted_proxies' => array(
+          0 => '10.0.0.0/8',      # Trust K8s/Traefik internal IPs
+          1 => '172.16.0.0/12',
+          2 => '192.168.0.0/16',
+        ),
+        'overwriteprotocol' => 'https',
+        'overwrite.cli.url' => 'https://nextcloud.jadogg.com',
+        'overwritehost' => 'nextcloud.jadogg.com',
+      );
+
+# 4. Persistence
+persistence:
+  enabled: true
+  size: 20Gi
+  storageClass: longhorn
+  accessMode: ReadWriteOnce
+
+# 5. Ingress
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - nextcloud.jadogg.com
+  hosts:
+    - host: nextcloud.jadogg.com
+      paths:
+        - path: /
+          pathType: Prefix

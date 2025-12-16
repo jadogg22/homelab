@@ -1,0 +1,19 @@
+
+auth:
+  existingSecret: mariadb-secrets
+  existingSecretRootPasswordKey: mariadb-root-password # The key that's failing
+  existingSecretPasswordKey: nextcloud-password       # A key for the Nextcloud user
+  username: nextcloud
+  database: nextcloud
+
+primary:
+  persistence:
+    enabled: true
+    size: 20Gi                   # adjust based on needs
+    storageClass: longhorn       # your SC for persistence
+
+  service:
+    type: LoadBalancer
+    loadBalancerIP: 10.0.1.159
+    ports:
+      mysql: 3306  # Explicitly naming the port is safer with Bitnami
