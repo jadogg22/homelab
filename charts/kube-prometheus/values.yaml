@@ -1,0 +1,106 @@
+# charts/kube-prometheus/values.yaml
+
+# ---------------------------------------------------------------------
+# 1. Grafana Configuration
+# ---------------------------------------------------------------------
+grafana:
+  enabled: true
+  adminPassword: "admin" # (Consider changing this!)
+  
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hostname: grafana.jadogg.com
+    tls: true
+    extraTls:
+      - hosts:
+          - grafana.jadogg.com
+        secretName: jadogg-wildcard-cert
+
+# ---------------------------------------------------------------------
+# 2. Prometheus Configuration
+# ---------------------------------------------------------------------
+prometheus:
+  enabled: true
+  
+  # FIX: Point to legacy repository to resolve ImagePullBackOff
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/prometheus
+    tag: 2.54.1-debian-12-r0
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hostname: prometheus.jadogg.com
+    tls: true
+    extraTls:
+      - hosts:
+          - prometheus.jadogg.com
+        secretName: jadogg-wildcard-cert
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+
+# ---------------------------------------------------------------------
+# 3. Alertmanager Configuration
+# ---------------------------------------------------------------------
+alertmanager:
+  enabled: true
+  
+  # FIX: Point to legacy repository
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/alertmanager
+    tag: 0.27.0-debian-12-r3
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hostname: alerts.jadogg.com
+    tls: true
+    extraTls:
+      - hosts:
+          - alerts.jadogg.com
+        secretName: jadogg-wildcard-cert
+
+# ---------------------------------------------------------------------
+# 4. Operator Configuration
+# ---------------------------------------------------------------------
+operator:
+  enabled: true
+  
+  # FIX: Point to legacy repository
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/prometheus-operator
+    tag: 0.85.0-debian-12-r0
+
+# ---------------------------------------------------------------------
+# 5. Hidden Dependencies (Crucial Fixes)
+# ---------------------------------------------------------------------
+# These components are enabled by default but were failing in your logs.
+# We must explicitly override their images too.
+
+kubeStateMetrics:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/kube-state-metrics
+    tag: 2.16.0-debian-12-r5
+
+blackboxExporter:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/blackbox-exporter
+    tag: 0.27.0-debian-12-r4

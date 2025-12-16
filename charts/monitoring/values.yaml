@@ -1,72 +1,141 @@
-# values.yaml
-namespace: monitoring
+# charts/monitoring/values.yaml
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  defaultStorageClass: ""
+  security:
+    allowInsecureImages: false
+  compatibility:
+    openshift:
+      adaptSecurityContext: auto
 
-# Grafana
-grafana:
+# ---------------------------------------------------------------------
+# 1. Prometheus Operator (NEEDS LEGACY IMAGE FIX)
+# ---------------------------------------------------------------------
+operator:
   enabled: true
+  resourcesPreset: nano
+  # Fix: Point to legacy repo
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/prometheus-operator
+    tag: 0.85.0-debian-12-r0
+  serviceAccount:
+    create: true
+  service:
+    type: ClusterIP
+  serviceMonitor:
+    enabled: true
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+
+# ---------------------------------------------------------------------
+# 2. Prometheus (NEEDS LEGACY IMAGE FIX)
+# ---------------------------------------------------------------------
+prometheus:
+  enabled: true
+  resourcesPreset: nano
+  # Fix: Point to legacy repo
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/prometheus
+    tag: 2.54.1-debian-12-r0
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: false
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+  service:
+    type: ClusterIP
+  pdb:
+    create: true
+  networkPolicy:
+    enabled: true
+  
+  # Simplified Ingress Config
   ingress:
     enabled: true
-    className: traefik
+    ingressClassName: traefik
+    hostname: prometheus.jadogg.com
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    hosts:
-      - grafana.jadogg.com
-    tls:
+    tls: true
+    extraTls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - prometheus.jadogg.com
+
+# ---------------------------------------------------------------------
+# 3. Grafana
+# ---------------------------------------------------------------------
+grafana:
+  enabled: true
+  resourcesPreset: nano
+  adminUser: admin
+  adminPassword: "changeme" # Don't forget to update this later!
+  
+  # Simplified Ingress Config
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hostname: grafana.jadogg.com
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    tls: true
+    extraTls:
       - secretName: jadogg-wildcard-cert
         hosts:
           - grafana.jadogg.com
+  
+  service:
+    type: ClusterIP
   persistence:
     enabled: true
-    storageClassName: longhorn
-    size: 5Gi
+    storageClassName: "" # Uses default if empty
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
 
-# Prometheus
-prometheus:
-  prometheusSpec:
-    serviceMonitorSelectorNilUsesHelmValues: false
-    serviceMonitorSelector: {}
-    podMonitorSelectorNilUsesHelmValues: false
-    podMonitorSelector: {}
-    retention: 15d
-    resources:
-      requests:
-        memory: 2Gi
-        cpu: 500m
-    volumeClaimTemplate:
-      spec:
-        storageClassName: longhorn
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 10Gi
-
-# Alertmanager
-alertmanager:
-  enabled: true
-  alertmanagerSpec:
-    replicas: 1
-    resources:
-      requests:
-        memory: 256Mi
-        cpu: 100m
-    volumeClaimTemplate:
-      spec:
-        storageClassName: longhorn
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 2Gi
-
-# Disable unneeded exporters if you want lighter footprint
-kubeStateMetrics:
-  enabled: true
-
+# ---------------------------------------------------------------------
+# 4. Node Exporter & Kube State Metrics (NEEDS LEGACY IMAGE FIX)
+# ---------------------------------------------------------------------
 nodeExporter:
   enabled: true
 
-# Optional: enable Prometheus Operator admission webhooks with cert-manager
-prometheusOperator:
-  admissionWebhooks:
-    certManager:
-      enabled: true
+kubeStateMetrics:
+  enabled: true
+  # Fix: Point to legacy repo
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/kube-state-metrics
+    tag: 2.16.0-debian-12-r5
 
+# ---------------------------------------------------------------------
+# 5. Blackbox Exporter (You had this one correct!)
+# ---------------------------------------------------------------------
+blackboxExporter:
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/blackbox-exporter
+    tag: 0.27.0-debian-12-r4

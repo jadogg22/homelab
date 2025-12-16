@@ -1,21 +1,37 @@
+
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: monitoring
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: 'https://github.com/jadogg22/homelab.git'
-    targetRevision: main
-    path: charts/monitoring
-    helm:
-      valueFiles:
-        - values.yaml
+
+  sources:
+    # Source 1: The Community Chart
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 69.4.1 # Stable recent version (or use 66.x)
+      helm:
+        valueFiles:
+          - $values/charts/kube-prometheus-stack/values.yaml
+
+    # Source 2: Your Git Repo
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: HEAD
+      ref: values
+
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
     namespace: monitoring
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true # Critical for this chart due to large CRDs

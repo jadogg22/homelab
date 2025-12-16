@@ -1,0 +1,70 @@
+# charts/kube-prometheus-stack/values.yaml
+
+# 1. Grafana
+grafana:
+  enabled: true
+  adminPassword: "admin"
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - grafana.jadogg.com
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - grafana.jadogg.com
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    accessModes: ["ReadWriteOnce"]
+
+# 2. Prometheus
+prometheus:
+  enabled: true
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - prometheus.jadogg.com
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - prometheus.jadogg.com
+
+# 3. Alertmanager
+alertmanager:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - alerts.jadogg.com
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - alerts.jadogg.com
+
+# 4. Disable stuff you usually don't need immediately
+# (Keeps the deployment lighter)
+defaultRules:
+  create: true
+  rules:
+    etcd: false
+    kubeScheduler: false
