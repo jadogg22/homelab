@@ -44,3 +44,13 @@ ingress:
         hosts:
           - adguard.jadogg.com
 
+
+probes:
+  startup:
+    enabled: true
+    spec:
+      tcpSocket:
+        port: 3000
+      initialDelaySeconds: 60
+      periodSeconds: 5
+      failureThreshold: 60
