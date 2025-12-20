@@ -20,6 +20,11 @@ spec:
         - name: jellyfin
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: jellyfin
+            - secretRef:
+                name: jellyfin
           ports:
             - containerPort: 8096
           volumeMounts:
