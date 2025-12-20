@@ -41,7 +41,12 @@ apps:
     source:
       repoURL: https://utkuozdemir.org/helm-charts
       chart: jellyfin
-      targetRevision: 2.0.0 
+      targetRevision: 2.0.0
+      helm:
+        values: |
+          securityContext:
+            capabilities:
+              add: []
 
 # Default sync policy for all applications
 syncPolicy:
