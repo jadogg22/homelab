@@ -25,6 +25,7 @@ securityContext:
   container:
     allowPrivilegeEscalation: false
     runAsNonRoot: true
+    runAsUser: 1000 # Specify a non-root user ID
     readOnlyRootFilesystem: false
     capabilities:
       drop:
