@@ -47,6 +47,21 @@ apps:
           securityContext:
             capabilities:
               add: []
+          ingress:
+            enabled: true
+            hosts:
+            - host: jellyfin.jadogg.com
+              paths:
+              - path: /
+                pathType: Prefix
+          persistence:
+            config:
+              enabled: true
+              storageClass: longhorn-replicated
+            data:
+              enabled: true
+              storageClass: longhorn-replicated
+              size: 50Gi
 
 # Default sync policy for all applications
 syncPolicy:
