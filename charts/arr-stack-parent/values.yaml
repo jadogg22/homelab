@@ -1,12 +1,9 @@
 # Default destination for all apps
 destination:
   server: https://kubernetes.default.svc
-  # It's good practice to put these in a dedicated namespace
   namespace: media
 
-# The list of apps to deploy
-# Each app will be created as a separate ArgoCD Application resource.
-# We specify the Helm repository, chart name, and version for each.
+# Applications
 apps:
   - name: sonarr
     enabled: true
@@ -39,36 +36,42 @@ apps:
   - name: jellyfin
     enabled: true
     source:
-      repoURL: https://utkuozdemir.org/helm-charts
+      repoURL: https://beluga-cloud.github.io/charts
       chart: jellyfin
-      targetRevision: 2.0.0
+      targetRevision: 2.3.0
       helm:
         values: |
           containerSecurityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             capabilities:
-              add: []        # removes NET_ADMIN
               drop:
                 - ALL
+            readOnlyRootFilesystem: false
           podSecurityContext:
+            runAsNonRoot: true
             seccompProfile:
               type: RuntimeDefault
           ingress:
             enabled: true
-            hosts:
-              - host: jellyfin.jadogg.com
-                paths:
-                  - path: /
-                    pathType: Prefix
+            hostname: jellyfin.jadogg.com
+            path: /
+            pathType: Prefix
           persistence:
             config:
               enabled: true
-              storageClass: longhorn-replicated
+              volumeClaimSpec:
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 250Mi
             data:
               enabled: true
-              storageClass: longhorn-replicated
-              size: 50Gi
+              volumeClaimSpec:
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 50Gi
 
 # Default sync policy for all applications
 syncPolicy:
