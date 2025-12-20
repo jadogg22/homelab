@@ -11,30 +11,30 @@ apps:
   - name: sonarr
     enabled: true
     source:
-      repoURL: https://bjw-s-labs.github.io/helm-charts
+      repoURL: https://charts.pree.dev
       chart: sonarr
-      targetRevision: 1.11.1 
+      targetRevision: 1.11.1
 
   - name: radarr
     enabled: true
     source:
-      repoURL: https://bjw-s-labs.github.io/helm-charts
+      repoURL: https://charts.pree.dev
       chart: radarr
-      targetRevision: 1.24.1 
+      targetRevision: 1.24.1
 
   - name: prowlarr
     enabled: true
     source:
-      repoURL: https://bjw-s-labs.github.io/helm-charts
+      repoURL: https://charts.pree.dev
       chart: prowlarr
       targetRevision: 1.49.1
 
   - name: qbittorrent
     enabled: true
     source:
-      repoURL: https://bjw-s-labs.github.io/helm-charts
+      repoURL: https://charts.gabe565.com
       chart: qbittorrent
-      targetRevision: 0.4.1 
+      targetRevision: 0.4.1
   
   - name: jellyfin
     enabled: true
