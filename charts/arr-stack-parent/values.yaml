@@ -1,0 +1,52 @@
+# Default destination for all apps
+destination:
+  server: https://kubernetes.default.svc
+  # It's good practice to put these in a dedicated namespace
+  namespace: media
+
+# The list of apps to deploy
+# Each app will be created as a separate ArgoCD Application resource.
+# We specify the Helm repository, chart name, and version for each.
+apps:
+  - name: sonarr
+    enabled: true
+    source:
+      repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: sonarr
+      targetRevision: 1.11.1 
+
+  - name: radarr
+    enabled: true
+    source:
+      repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: radarr
+      targetRevision: 1.24.1 
+
+  - name: prowlarr
+    enabled: true
+    source:
+      repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: prowlarr
+      targetRevision: 5.1.2 
+
+  - name: qbittorrent
+    enabled: true
+    source:
+      repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: qbittorrent
+      targetRevision: 0.4.1 
+  
+  - name: jellyfin
+    enabled: true
+    source:
+      repoURL: https://utkuozdemir.org/helm-charts
+      chart: jellyfin
+      targetRevision: 2.0.0 
+
+# Default sync policy for all applications
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true

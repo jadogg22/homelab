@@ -1,0 +1,29 @@
+{{- range .Values.apps }}
+{{- if .enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}
+  namespace: argocd # This must be where ArgoCD is running
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: {{ .source.repoURL }}
+    chart: {{ .source.chart }}
+    targetRevision: {{ .source.targetRevision }}
+    helm:
+      # Pass down the values for the child chart.
+      # For now, we'll just tell it to use the default values.yaml from the chart.
+      # You could expand this to pass custom values.
+      valueFiles:
+        - values.yaml
+  destination:
+    server: {{ $.Values.destination.server }}
+    namespace: {{ $.Values.destination.namespace }}
+  syncPolicy:
+    {{- toYaml $.Values.syncPolicy | nindent 4 }}
+{{- end }}
+{{- end }}
