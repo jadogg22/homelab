@@ -4,13 +4,14 @@ This document outlines common operational procedures for the homelab Kubernetes 
 
 ## Storage (Longhorn)
 
-The cluster uses Longhorn for persistent storage. A `StorageClass` named `longhorn-replicated` is available.
+The cluster uses Longhorn for persistent storage. A `StorageClass` named `longhorn-replicated` and longhorn is available.
 
 ### Creating a Persistent Volume Claim (PVC)
 
 To create a persistent volume, you need to create a `PersistentVolumeClaim` object. The storage provisioner will automatically create a corresponding `PersistentVolume`.
 
 **Example `pvc.yaml`:**
+
 ```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -19,7 +20,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn-replicated
+  storageClassName: longhorn
   resources:
     requests:
       storage: 5Gi # Adjust the size as needed
@@ -38,6 +39,7 @@ The cluster uses Traefik as the Ingress controller to expose services to the out
 To expose a service, you need to create an `Ingress` resource. Traefik is the default IngressClass, and it automatically redirects HTTP traffic to HTTPS.
 
 **Example `ingress.yaml`:**
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -48,16 +50,16 @@ metadata:
     # traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   rules:
-  - host: my-app.yourdomain.com # Replace with your actual domain
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: my-app-service # The name of your application's service
-            port:
-              number: 8080 # The port your service is listening on
+    - host: my-app.jadogg.com # Replace with your actual domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app-service # The name of your application's service
+                port:
+                  number: 8080 # The port your service is listening on
 ```
 
 - Replace `my-app.yourdomain.com` with the desired hostname. You will need to configure your DNS to point this hostname to the Traefik LoadBalancer IP (`10.0.1.150`).

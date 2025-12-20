@@ -1,0 +1,35 @@
+image:
+  repository: ghcr.io/linuxserver/jellyfin
+  tag: 10.8.13
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+ingress:
+  enabled: true
+  hostname: jellyfin.jadogg.com
+  path: /
+  pathType: Prefix
+
+persistence:
+  config:
+    enabled: true
+    size: 250Mi
+    storageClass: longhorn-replicated
+  data:
+    enabled: true
+    size: 50Gi
+    storageClass: longhorn-replicated
+
+securityContext:
+  container:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+  pod:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
