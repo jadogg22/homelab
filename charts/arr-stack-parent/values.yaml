@@ -27,7 +27,7 @@ apps:
     source:
       repoURL: https://bjw-s-labs.github.io/helm-charts
       chart: prowlarr
-      targetRevision: 5.1.2 
+      targetRevision: 1.49.1
 
   - name: qbittorrent
     enabled: true
