@@ -32,5 +32,6 @@ securityContext:
       drop:
         - ALL
   pod:
+    fsGroup: 911
     seccompProfile:
       type: RuntimeDefault
