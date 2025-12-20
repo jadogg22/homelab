@@ -10,6 +10,9 @@ ingress:
   hostname: jellyfin.jadogg.com
   path: /
   pathType: Prefix
+  clusterIssuer: letsencrypt-prod
+  secretName: jellyfin-tls
+  annotations: {}
 
 persistence:
   config:

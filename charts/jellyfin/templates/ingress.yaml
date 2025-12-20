@@ -3,7 +3,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: jellyfin
+  annotations:
+    {{- if .Values.ingress.annotations }}
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+    {{- end }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer | default "letsencrypt-prod" }}
 spec:
+  ingressClassName: traefik
   rules:
     - host: {{ .Values.ingress.hostname }}
       http:
@@ -15,4 +21,8 @@ spec:
                 name: jellyfin
                 port:
                   number: 8096
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hostname }}
+      secretName: {{ .Values.ingress.secretName | default (printf "%s-tls" .Values.ingress.hostname) }}
 {{- end }}
