@@ -5,6 +5,9 @@ image:
 
 replicaCount: 1
 
+puid: "911"
+pgid: "911"
+
 ingress:
   enabled: true
   hostname: jellyfin.jadogg.com
