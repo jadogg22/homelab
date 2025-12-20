@@ -35,33 +35,36 @@ apps:
       repoURL: https://charts.gabe565.com
       chart: qbittorrent
       targetRevision: 0.4.1
-  
+
   - name: jellyfin
     enabled: true
     source:
-      repoURL: https://utkuozdemir.org/helm-charts
-      chart: jellyfin
-      targetRevision: 2.0.0
-      helm:
-        values: |
-          securityContext:
-            capabilities:
-              add: []
-          ingress:
-            enabled: true
-            hosts:
-            - host: jellyfin.jadogg.com
-              paths:
-              - path: /
-                pathType: Prefix
-          persistence:
-            config:
-              enabled: true
-              storageClass: longhorn-replicated
-            data:
-              enabled: true
-              storageClass: longhorn-replicated
-              size: 50Gi
+     repoURL: https://utkuozdemir.org/helm-charts
+     chart: jellyfin
+     targetRevision: 2.0.0
+     helm:
+       values: |
+         containerSecurityContext:
+           capabilities:
+             drop:
+               - ALL
+
+         ingress:
+           enabled: true
+           hosts:
+             - host: jellyfin.jadogg.com
+               paths:
+                 - path: /
+                   pathType: Prefix
+
+         persistence:
+           config:
+             enabled: true
+             storageClass: longhorn-replicated
+           data:
+             enabled: true
+             storageClass: longhorn-replicated
+             size: 50Gi
 
 # Default sync policy for all applications
 syncPolicy:
