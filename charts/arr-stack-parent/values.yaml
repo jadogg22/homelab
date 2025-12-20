@@ -35,6 +35,7 @@ apps:
       repoURL: https://charts.gabe565.com
       chart: qbittorrent
       targetRevision: 0.4.1
+
   - name: jellyfin
     enabled: true
     source:
@@ -43,21 +44,23 @@ apps:
       targetRevision: 2.0.0
       helm:
         values: |
-          securityContext:
+          containerSecurityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
             capabilities:
-              add: []
+              add: []        # removes NET_ADMIN
               drop:
-              - ALL
+                - ALL
           podSecurityContext:
             seccompProfile:
               type: RuntimeDefault
           ingress:
             enabled: true
             hosts:
-            - host: jellyfin.jadogg.com
-              paths:
-              - path: /
-                pathType: Prefix
+              - host: jellyfin.jadogg.com
+                paths:
+                  - path: /
+                    pathType: Prefix
           persistence:
             config:
               enabled: true
@@ -66,6 +69,7 @@ apps:
               enabled: true
               storageClass: longhorn-replicated
               size: 50Gi
+
 # Default sync policy for all applications
 syncPolicy:
   automated:
