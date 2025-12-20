@@ -7,6 +7,7 @@ replicaCount: 1
 
 puid: "911"
 pgid: "911"
+permissionsChown: "false"
 
 ingress:
   enabled: true
