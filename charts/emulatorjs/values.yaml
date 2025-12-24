@@ -1,0 +1,31 @@
+# values.yaml for emulatorjs
+
+# Ingress Configuration
+ingress:
+  front:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: retro.jadogg.com # Make sure to update your DNS to point this to your traefik load balancer IP
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - retro.jadogg.com
+
+# Persistence Configuration
+persistence:
+  config:
+    enabled: true
+    # type: pvc # pvc is the default
+    mountPath: /config
+    size: 1Gi
+  data:
+    enabled: true
+    # type: pvc # pvc is the default
+    mountPath: /data
+    size: 25Gi # Set a larger size for ROMs
