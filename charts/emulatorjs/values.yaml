@@ -24,8 +24,10 @@ persistence:
     # type: pvc # pvc is the default
     mountPath: /config
     size: 1Gi
+    storageClass: longhorn-replicated
   data:
     enabled: true
     # type: pvc # pvc is the default
     mountPath: /data
     size: 25Gi # Set a larger size for ROMs
+    storageClass: longhorn-replicated
