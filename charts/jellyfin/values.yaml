@@ -7,6 +7,5 @@ tcpIngressRoute:
 
 service:
   name: jellyfin-ext
-  type: ExternalName
   externalName: 10.0.1.50
   port: 30013
