@@ -1,0 +1,21 @@
+service:
+  main:
+    type: ExternalName
+    externalName: 10.0.1.50
+    port: 80
+
+ingress:
+  main:
+    enabled: true
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: truenas.jadogg.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - truenas.jadogg.com

@@ -1,0 +1,32 @@
+{{- if .Values.ingress.main.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-main
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    {{- toYaml .Values.ingress.main.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.main.className }}
+  rules:
+    {{- range .Values.ingress.main.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: truenas
+                port:
+                  name: http
+          {{- end }}
+    {{- end }}
+  {{- if .Values.ingress.main.tls }}
+  tls:
+    {{- toYaml .Values.ingress.main.tls | nindent 4 }}
+  {{- end }}
+{{- end }}

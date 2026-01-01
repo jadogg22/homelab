@@ -1,0 +1,9 @@
+nfs:
+  server: 10.0.1.50
+  path: /mnt/Storage/kubestore
+
+storageClass:
+  name: truenas-nfs-kubestore
+  defaultClass: false
+  reclaimPolicy: Delete
+  archiveOnDelete: true
