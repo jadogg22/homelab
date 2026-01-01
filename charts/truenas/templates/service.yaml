@@ -11,8 +11,8 @@ metadata:
   {{- end }}
 spec:
   type: ExternalName
-  externalName: 10.0.1.50   # <- NAS IP
+  externalName: 10.0.1.50
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 443
+      targetPort: 443
       protocol: TCP
