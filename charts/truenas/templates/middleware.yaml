@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: truenas-hostheader
+  namespace: default
+spec:
+  headers:
+    customRequestHeaders:
+      Host: "10.0.1.50"

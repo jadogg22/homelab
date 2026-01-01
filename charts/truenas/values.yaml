@@ -10,6 +10,7 @@ ingress:
     className: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: default-truenas-hostheader@kubernetescrd
     hosts:
       - host: truenas.jadogg.com
         paths:
