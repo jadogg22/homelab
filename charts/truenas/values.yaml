@@ -7,10 +7,11 @@ ingress:
     className: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/service.serversscheme: https
     hosts:
       - host: truenas.jadogg.com
         paths:
-          - path: /
+          - path: /ui/
             pathType: Prefix
     tls:
       - secretName: jadogg-wildcard-cert
