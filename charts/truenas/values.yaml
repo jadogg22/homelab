@@ -1,16 +1,9 @@
-service:
-  main:
-    type: ExternalName
-    externalName: 10.0.1.50
-    port: 80
-
 ingress:
   main:
     enabled: true
     className: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: default-truenas-hostheader@kubernetescrd
     hosts:
       - host: truenas.jadogg.com
         paths:
