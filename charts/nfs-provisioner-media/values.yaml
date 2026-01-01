@@ -1,9 +1,0 @@
-nfs:
-  server: 10.0.1.50
-  path: /mnt/Storage/media
-
-storageClass:
-  name: truenas-nfs-media
-  defaultClass: false
-  reclaimPolicy: Delete
-  archiveOnDelete: true

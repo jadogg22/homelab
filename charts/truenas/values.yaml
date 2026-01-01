@@ -10,10 +10,11 @@ ingress:
     className: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: default-truenas-stripprefix@kubernetescrd
     hosts:
       - host: truenas.jadogg.com
         paths:
-          - path: /
+          - path: /ui
             pathType: Prefix
     tls:
       - secretName: jadogg-wildcard-cert

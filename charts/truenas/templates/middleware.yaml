@@ -1,0 +1,10 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: truenas-stripprefix
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /ui
+    forceSlash: false
