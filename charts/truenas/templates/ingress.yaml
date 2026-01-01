@@ -22,7 +22,7 @@ spec:
               service:
                 name: truenas
                 port:
-                  name: http
+                  number: 80
           {{- end }}
     {{- end }}
   {{- if .Values.ingress.main.tls }}
