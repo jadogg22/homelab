@@ -1,141 +1,95 @@
 # charts/monitoring/values.yaml
-# Global settings
-global:
-  imageRegistry: ""
-  imagePullSecrets: []
-  defaultStorageClass: ""
-  security:
-    allowInsecureImages: false
-  compatibility:
-    openshift:
-      adaptSecurityContext: auto
 
 # ---------------------------------------------------------------------
-# 1. Prometheus Operator (NEEDS LEGACY IMAGE FIX)
+# 1. Grafana (The Dashboard)
 # ---------------------------------------------------------------------
-operator:
+grafana:
   enabled: true
-  resourcesPreset: nano
-  # Fix: Point to legacy repo
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/prometheus-operator
-    tag: 0.85.0-debian-12-r0
-  serviceAccount:
-    create: true
-  service:
-    type: ClusterIP
-  serviceMonitor:
-    enabled: true
-  podSecurityContext:
-    enabled: true
-    fsGroup: 1001
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 1001
-    runAsGroup: 1001
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop: ["ALL"]
-
-# ---------------------------------------------------------------------
-# 2. Prometheus (NEEDS LEGACY IMAGE FIX)
-# ---------------------------------------------------------------------
-prometheus:
-  enabled: true
-  resourcesPreset: nano
-  # Fix: Point to legacy repo
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/prometheus
-    tag: 2.54.1-debian-12-r0
-  serviceAccount:
-    create: true
-    automountServiceAccountToken: false
-  podSecurityContext:
-    enabled: true
-    fsGroup: 1001
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 1001
-    runAsGroup: 1001
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop: ["ALL"]
-  service:
-    type: ClusterIP
-  pdb:
-    create: true
-  networkPolicy:
-    enabled: true
   
-  # Simplified Ingress Config
+  # --- SECRETS ---
+  admin:
+    existingSecret: "monitoring-secrets"
+    userKey: "grafana-admin-user"
+    passwordKey: "grafana-admin-password"
+  # -------------------
   ingress:
     enabled: true
     ingressClassName: traefik
-    hostname: prometheus.jadogg.com
+    hosts:
+      - grafana.jadogg.com
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    tls: true
-    extraTls:
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - grafana.jadogg.com
+
+  persistence:
+    enabled: true
+    storageClassName: "longhorn" 
+    accessModes: ["ReadWriteOnce"]
+    size: 10Gi
+
+# ---------------------------------------------------------------------
+# 2. Prometheus (The Database)
+# ---------------------------------------------------------------------
+prometheus:
+  enabled: true
+  prometheusSpec:
+    storageSpec: 
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "longhorn" 
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi 
+
+    # Retention: How long to keep data?
+    retention: 14d 
+    
+    # Ingress for Prometheus itself 
+    externalUrl: https://prometheus.jadogg.com
+    
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - prometheus.jadogg.com
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    tls:
       - secretName: jadogg-wildcard-cert
         hosts:
           - prometheus.jadogg.com
 
 # ---------------------------------------------------------------------
-# 3. Grafana
+# 3. Alertmanager (The Notifier)
 # ---------------------------------------------------------------------
-grafana:
+alertmanager:
   enabled: true
-  resourcesPreset: nano
-  adminUser: admin
-  adminPassword: "changeme" # Don't forget to update this later!
-  
-  # Simplified Ingress Config
-  ingress:
-    enabled: true
-    ingressClassName: traefik
-    hostname: grafana.jadogg.com
-    annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    tls: true
-    extraTls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
-          - grafana.jadogg.com
-  
-  service:
-    type: ClusterIP
-  persistence:
-    enabled: true
-    storageClassName: "" # Uses default if empty
-    accessModes:
-      - ReadWriteOnce
-    size: 10Gi
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "longhorn"
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
 
 # ---------------------------------------------------------------------
-# 4. Node Exporter & Kube State Metrics (NEEDS LEGACY IMAGE FIX)
+# 4. Exporters & Utilities
 # ---------------------------------------------------------------------
 nodeExporter:
   enabled: true
 
 kubeStateMetrics:
   enabled: true
-  # Fix: Point to legacy repo
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/kube-state-metrics
-    tag: 2.16.0-debian-12-r5
 
-# ---------------------------------------------------------------------
-# 5. Blackbox Exporter (You had this one correct!)
-# ---------------------------------------------------------------------
-blackboxExporter:
-  image:
-    registry: docker.io
-    repository: bitnamilegacy/blackbox-exporter
-    tag: 0.27.0-debian-12-r4
+# Clean up default rules that might not apply to your bare metal cluster
+defaultRules:
+  create: true
+  rules:
+    etcd: false      
+    kubeScheduler: false

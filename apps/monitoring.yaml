@@ -1,5 +1,3 @@
-
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,18 +9,18 @@ spec:
   project: default
 
   sources:
-    # Source 1: The Community Chart
+    # Source 1: The Official Community Chart 
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
-      targetRevision: 69.4.1 # Stable recent version (or use 66.x)
+      targetRevision: 80.4.1 
       helm:
         valueFiles:
-          - $values/charts/kube-prometheus-stack/values.yaml
+          - $values/charts/monitoring/values.yaml 
 
-    # Source 2: Your Git Repo
+    # Source 2: Your Git Repo 
     - repoURL: https://github.com/jadogg22/homelab.git
       targetRevision: HEAD
-      ref: values
+      ref: values 
 
   destination:
     server: https://kubernetes.default.svc
@@ -34,4 +32,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true # Critical for this chart due to large CRDs
+      - ServerSideApply=true 
