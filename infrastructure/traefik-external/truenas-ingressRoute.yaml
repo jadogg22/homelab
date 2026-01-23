@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: truenas
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`truenas.jadogg.com`)
+      kind: Rule
+      services:
+        - name: truenas
+          kind: TraefikService
+  tls:
+    secretName: jadogg-wildcard-cert
