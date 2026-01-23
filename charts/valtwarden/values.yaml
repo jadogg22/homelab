@@ -1,0 +1,33 @@
+# charts/vaultwarden/values.yaml
+
+# 1. Environment Variables
+env:
+  SIGNUPS_ALLOWED: "true"
+  DOMAIN: "https://vault.jadogg.com"
+
+# 2. Storage (Connecting to TrueNAS iSCSI)
+persistence:
+  data:
+    enabled: true
+    storageClassName: "truenas-iscsi" # connects to the Democratic CSI Driver
+    size: 10Gi
+    accessMode: ReadWriteOnce
+
+# 3. Ingress (Connecting to Traefik)
+ingress:
+  enabled: true
+  # Traefik-specific annotations for HTTPS
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  
+  hosts:
+    - host: vault.jadogg.com
+      paths:
+        - path: /
+          pathType: Prefix
+  
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - vault.jadogg.com

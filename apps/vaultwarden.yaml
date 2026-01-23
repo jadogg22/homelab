@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultwarden
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  sources:
+    # Source 1: Community Vaultwarden Chart
+    # This is the most maintained community chart
+    - repoURL: https://gngpp.github.io/helm-charts
+      chart: vaultwarden
+      targetRevision: 0.34.4 
+      helm:
+        valueFiles:
+          - $values/charts/vaultwarden/values.yaml
+
+    # Source 2: Your Values
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vaultwarden # Isolate this app
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # This creates the 'vaultwarden' ns automatically
