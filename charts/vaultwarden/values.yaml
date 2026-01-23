@@ -7,11 +7,10 @@ env:
 
 # 2. Storage (Connecting to TrueNAS iSCSI)
 persistence:
-  data:
-    enabled: true
-    storageClassName: "truenas-iscsi" # connects to the Democratic CSI Driver
-    size: 10Gi
-    accessMode: ReadWriteOnce
+  enabled: true
+  size: "10Gi"
+  storageClass: "truenas-iscsi" # This must match your Democratic CSI class
+  accessMode: ReadWriteOnce
 
 # 3. Ingress (Connecting to Traefik)
 ingress:
