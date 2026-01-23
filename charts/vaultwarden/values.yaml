@@ -1,9 +1,7 @@
 # charts/vaultwarden/values.yaml
+domain: "https://vault.jadogg.com"
+signupsAllowed:  true
 
-# 1. Environment Variables
-env:
-  SIGNUPS_ALLOWED: "true"
-  DOMAIN: "https://vault.jadogg.com"
 
 # 2. Storage (Connecting to TrueNAS iSCSI)
 persistence:
