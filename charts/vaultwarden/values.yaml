@@ -1,30 +1,36 @@
 # charts/vaultwarden/values.yaml
+
+# 1. Global Settings
 domain: "https://vault.jadogg.com"
-signupsAllowed:  true
+signupsAllowed: true
 
-
-# 2. Storage (Connecting to TrueNAS iSCSI)
+# 2. Storage
 persistence:
   enabled: true
   size: "10Gi"
-  storageClass: "truenas-iscsi" # This must match your Democratic CSI class
+  storageClass: "truenas-iscsi"
   accessMode: ReadWriteOnce
 
-# 3. Ingress (Connecting to Traefik)
+# 3. Ingress (THIS IS THE FIX)
 ingress:
   enabled: true
-  # Traefik-specific annotations for HTTPS
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+  # Override the default 'nginx' class
+  className: "traefik" 
   
+  # The chart requires a LIST of hosts, not a single 'hostname'
   hosts:
     - host: vault.jadogg.com
       paths:
         - path: /
           pathType: Prefix
   
+  # TLS Configuration
   tls:
     - secretName: jadogg-wildcard-cert
       hosts:
         - vault.jadogg.com
+  
+  # Traefik-specific annotations
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
