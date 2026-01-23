@@ -1,31 +1,28 @@
 # charts/vaultwarden/values.yaml
 
-# charts/vaultwarden/values.yaml
-
 # 1. Global
 domain: "https://vault.jadogg.com"
-signupsAllowed: true
+signupsAllowed: true  
 
-# 2. Storage (THE FIX IS HERE)
+# 2. Storage
 persistence:
-  # You must nest everything under 'data' for this chart!
   data:
     enabled: true
     size: "10Gi"
-    storageClass: "truenas-iscsi"
-    accessMode: ReadWriteOnce
+    storageClass: "truenas-iscsi" 
+    accessMode: ReadWriteOnce     
 
 # 3. Ingress
 ingress:
   enabled: true
-  className: "traefik"
+  className: "traefik"  
   hosts:
     - host: vault.jadogg.com
       paths:
         - path: /
-          pathType: Prefix
+          pathType: Prefix  
   tls:
-    - secretName: jadogg-wildcard-cert
+    - secretName: jadogg-wildcard-cert  
       hosts:
         - vault.jadogg.com
   annotations:
