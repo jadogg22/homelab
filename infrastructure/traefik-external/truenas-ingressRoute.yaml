@@ -10,7 +10,10 @@ spec:
     - match: Host(`truenas.jadogg.com`)
       kind: Rule
       services:
-        - name: truenas
-          kind: TraefikService
+        - name: truenas   # Points to the Standard Service we made above
+          kind: Service   # Changed from TraefikService to Service
+          port: 443
+          # We attach the transport HERE now:
+          serversTransport: insecure-transport
   tls:
     secretName: jadogg-wildcard-cert
