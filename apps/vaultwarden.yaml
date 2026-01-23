@@ -10,15 +10,13 @@ spec:
   
   sources:
     # Source 1: Community Vaultwarden Chart
-    # This is the most maintained community chart
-    - repoURL: https://gngpp.github.io/helm-charts
+    - repoURL: https://guerzon.github.io/vaultwarden
       chart: vaultwarden
       targetRevision: 0.34.4 
       helm:
         valueFiles:
           - $values/charts/vaultwarden/values.yaml
 
-    # Source 2: Your Values
     - repoURL: https://github.com/jadogg22/homelab.git
       targetRevision: main
       ref: values
