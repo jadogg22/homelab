@@ -1,36 +1,33 @@
 # charts/vaultwarden/values.yaml
 
-# 1. Global Settings
+# charts/vaultwarden/values.yaml
+
+# 1. Global
 domain: "https://vault.jadogg.com"
 signupsAllowed: true
 
-# 2. Storage
+# 2. Storage (THE FIX IS HERE)
 persistence:
-  enabled: true
-  size: "10Gi"
-  storageClass: "truenas-iscsi"
-  accessMode: ReadWriteOnce
+  # You must nest everything under 'data' for this chart!
+  data:
+    enabled: true
+    size: "10Gi"
+    storageClass: "truenas-iscsi"
+    accessMode: ReadWriteOnce
 
-# 3. Ingress (THIS IS THE FIX)
+# 3. Ingress
 ingress:
   enabled: true
-  # Override the default 'nginx' class
-  className: "traefik" 
-  
-  # The chart requires a LIST of hosts, not a single 'hostname'
+  className: "traefik"
   hosts:
     - host: vault.jadogg.com
       paths:
         - path: /
           pathType: Prefix
-  
-  # TLS Configuration
   tls:
     - secretName: jadogg-wildcard-cert
       hosts:
         - vault.jadogg.com
-  
-  # Traefik-specific annotations
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
