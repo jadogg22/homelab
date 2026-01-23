@@ -7,4 +7,5 @@ spec:
   loadBalancer:
     servers:
       - url: "https://10.0.1.50"
+    serversTransport: insecure-transport
 
