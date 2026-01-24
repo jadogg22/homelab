@@ -3,6 +3,8 @@
 # 1. Global
 domain: "https://vault.jadogg.com"
 signupsAllowed: true  
+service:
+  port: 8080
 
 # 2. Storage
 persistence:
@@ -15,16 +17,15 @@ persistence:
 # 3. Ingress
 ingress:
   enabled: true
-  className: "traefik"  
+  className: traefik  
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
   hosts:
     - host: vault.jadogg.com
       paths:
         - path: /
-          pathType: Prefix  
+          pathType: Prefix
   tls:
-    - secretName: jadogg-wildcard-cert  
+    - secretName: jadogg-wildcard-cert
       hosts:
         - vault.jadogg.com
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
