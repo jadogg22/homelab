@@ -10,10 +10,6 @@ storageClasses:
     parameters:
       fsType: ext4
 
-# --- CONTROLLER CONFIG ---
-controller:
-  driver:
-    image: democraticcsi/democratic-csi:v1.9.1
 
 # --- NODE CONFIG (TALOS FIXES) ---
 node:
@@ -21,7 +17,6 @@ node:
   iscsiDirHostPath: /usr/local/etc/iscsi # Match the extension path
   iscsiDirHostPathType: DirectoryOrCreate
   driver:
-    image: democraticcsi/democratic-csi:v1.9.1
     extraEnv:
       - name: ISCSIADM_HOST_STRATEGY
         value: nsenter
