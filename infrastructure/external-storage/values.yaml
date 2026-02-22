@@ -11,6 +11,13 @@ storageClasses:
       fsType: ext4
 
 controller:
+  driver:
+    extraEnv:
+      - name: TRUENAS_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: truenas-api-key
+            key: apiKey
   extraEnv:
     - name: TRUENAS_API_KEY
       valueFrom:
@@ -49,8 +56,8 @@ driver:
       protocol: http
       host: 10.0.1.50
       port: 80
-      apiKey: "{{ .Env.TRUENAS_API_KEY }}"
       allowInsecure: true
+    apiKey: "{{ .Env.TRUENAS_API_KEY }}"
 
     zfs:
       datasetParentName: Storage/k8s-vols
