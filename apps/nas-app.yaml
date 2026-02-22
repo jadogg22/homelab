@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nas-external-services
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jadogg22/homelab.git
+    targetRevision: main
+    path: charts/external-services # Points to the folder with your YAML
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default # Or whatever namespace you want these to live in
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

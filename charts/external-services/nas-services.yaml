@@ -1,0 +1,87 @@
+---
+# TRUENAS UI (Port 80)
+apiVersion: v1
+kind: Service
+metadata:
+  name: truenas-ui
+  namespace: traefik
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: truenas-ui
+  namespace: traefik
+subsets:
+  - addresses:
+      - ip: 10.0.1.50
+    ports:
+      - name: http
+        port: 80
+
+---
+# JELLYFIN (Port 30013)
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin-external
+  namespace: traefik
+spec:
+  ports:
+    - name: http
+      port: 80          # Traefik will look for port 80 on the service
+      targetPort: 30013 # And send it to 30013 on the NAS
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: jellyfin-external
+  namespace: traefik
+subsets:
+  - addresses:
+      - ip: 10.0.1.50
+    ports:
+      - name: http
+        port: 30013 # Matches your NAS Jellyfin port
+
+---
+# SHARED INGRESS
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nas-ingress
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - secretName: jadogg-wildcard-cert
+      hosts:
+        - truenas.jadogg.com
+        - jellyfin.jadogg.com
+  rules:
+    - host: truenas.jadogg.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: truenas-ui
+                port:
+                  number: 80
+    - host: jellyfin.jadogg.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jellyfin-external
+                port:
+                  number: 80

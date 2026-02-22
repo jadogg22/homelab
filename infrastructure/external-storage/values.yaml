@@ -1,0 +1,61 @@
+csiDriver:
+  name: "org.democratic-csi.iscsi"
+
+storageClasses:
+  - name: truenas-iscsi
+    defaultClass: false
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    parameters:
+      fsType: ext4
+
+# --- CONTROLLER CONFIG ---
+controller:
+  driver:
+    image: democraticcsi/democratic-csi:v1.9.1
+
+# --- NODE CONFIG (TALOS FIXES) ---
+node:
+  hostPID: true
+  driver:
+    extraEnv:
+      - name: ISCSIADM_HOST_STRATEGY
+        value: nsenter
+      - name: ISCSIADM_HOST_PATH
+        value: /usr/local/sbin/iscsiadm
+  extraVolumes:
+    - name: iscsi-info
+      hostPath:
+        path: /var/iscsi  # <--- CHANGED: Talos needs /var/iscsi because it's writable
+        type: DirectoryOrCreate
+  extraVolumeMounts:
+    - name: iscsi-info
+      mountPath: /etc/iscsi
+
+# --- DRIVER LOGIC ---
+driver:
+  config:
+    driver: freenas-api-iscsi
+    httpConnection:
+      protocol: http
+      host: 10.0.1.50
+      port: 80
+      apiKeySecret: truenas-api-key
+      allowInsecure: true
+
+    zfs:
+      datasetParentName: Storage/k8s-iscsi-block 
+      detachedSnapshotsDatasetParentName: Storage/k8s-iscsi-snaps
+      zvolCompression: lz4
+      zvolDedup: off
+      zvolBlocksize: 16K
+
+    iscsi:
+      targetPortal: "10.0.1.50:3260"
+      baseName: "iqn.2005-10.org.freenas.ctl"
+      targetGroups:
+        - targetGroupPortalGroup: 1
+          targetGroupInitiatorGroup: 1
+          targetGroupAuthType: None
+      nameTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"

@@ -1,0 +1,13 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: truenas-api-key
+  namespace: democratic-csi
+spec:
+  encryptedData:
+    apiKey: AgAej40R5bp2xJ6DLb07+B8uXMiNO5jlUkLFAxmTtyud7TtgM7XhN9RVY3hTralRYuYkDCGtXDRCgIu5IL3Ib5Um+tymIw7hCLQLBFJoLeXwwK48T5h/c9KIeS0Itdxe7hIDus+poy/7E80ADeOBVTDFLmtThyNTqwPQEFnQgO0KlXi2OBVQ8G8NemfhtvP+pVB/dF6xYAOl+mjCtfLjOhmDK1NuPZmwJRSqZMohi8AnaMmiK0PTnT70byAoYme7fN7zkMteXGGfDC10LAcmKBTsLWe/tYkWOtzcagkAjOleFJ5LdPZyAKF9QgFvWXakX78eSR/z/gVcKFVWkAqYTcn61XZJNCfr+Q2XXwao5iS5F1f5aDGMEOZ1/STLj6gQ6JDPNSNbbbzIkjSWde9EUhJwr5XQxXH9dVjOf6bvLa0av993uge3pDYyMYkRw4QjM9AeJDM4y6inyDv59W/yNwW5kTL+ihwIfJ3WOqlG+tGCR1MFDuL4FSzTjOs5ZDJRAji+wCVEGpaQLaoiK5f1cQEHORiFG2Mh4PUbQEc76TJurszN4yZzVdOnoH2IpXSYbuf5tHFuOqQx9U/V8N4OgnALSaCVamYQx83zAFnyG6IvyjFBS+0MMFp3IPnsMgTc5JpenVD5Br3e+bcPyhjbLoa2L+kmMylZ+6+3bKgSV7OHV+47qlEew5xYySZ9D6DdHagfXSbM3rbj11xwpk3m+AlSG37FMuAre75ofKL6aEFXOLTf+y2Ro5AKpYS6b1YiBtE8KoMIkFcTlN/Ulzu/aUapxIg=
+  template:
+    metadata:
+      name: truenas-api-key
+      namespace: democratic-csi
