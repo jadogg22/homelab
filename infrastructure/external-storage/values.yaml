@@ -20,20 +20,16 @@ controller:
 # --- NODE CONFIG (TALOS FIXES) ---
 node:
   hostPID: true
+  # This override tells the built-in volume to use the Talos path
+  iscsiDirHostPath: /var/iscsi 
   driver:
     extraEnv:
       - name: ISCSIADM_HOST_STRATEGY
         value: nsenter
       - name: ISCSIADM_HOST_PATH
         value: /usr/local/sbin/iscsiadm
-  extraVolumes:
-    - name: iscsi-info
-      hostPath:
-        path: /var/iscsi  # <--- CHANGED: Talos needs /var/iscsi because it's writable
-        type: DirectoryOrCreate
-  extraVolumeMounts:
-    - name: iscsi-info
-      mountPath: /etc/iscsi
+  extraVolumes: []
+  extraVolumeMounts: []
 
 # --- DRIVER LOGIC ---
 driver:
