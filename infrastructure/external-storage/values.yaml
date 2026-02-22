@@ -13,23 +13,20 @@ storageClasses:
 # --- CONTROLLER CONFIG ---
 controller:
   driver:
-    image:
-      repository: democraticcsi/democratic-csi
-      tag: v1.9.1
+    image: democraticcsi/democratic-csi:v1.9.1
 
 # --- NODE CONFIG (TALOS FIXES) ---
 node:
   hostPID: true
-  # This override tells the built-in volume to use the Talos path
-  iscsiDirHostPath: /var/iscsi 
+  iscsiDirHostPath: /usr/local/etc/iscsi # Match the extension path
+  iscsiDirHostPathType: DirectoryOrCreate
   driver:
+    image: democraticcsi/democratic-csi:v1.9.1
     extraEnv:
       - name: ISCSIADM_HOST_STRATEGY
         value: nsenter
       - name: ISCSIADM_HOST_PATH
         value: /usr/local/sbin/iscsiadm
-  extraVolumes: []
-  extraVolumeMounts: []
 
 # --- DRIVER LOGIC ---
 driver:
