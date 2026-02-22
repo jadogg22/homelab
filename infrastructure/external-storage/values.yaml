@@ -41,7 +41,7 @@ driver:
 
     zfs:
       datasetParentName: Storage
-      detachedSnapshotsDatasetParentName: Storage
+      detachedSnapshotsDatasetParentName: Storage/k8s-iscsi-snaps
       zvolCompression: lz4
       zvolDedup: off
       zvolBlocksize: 16K
