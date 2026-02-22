@@ -15,7 +15,7 @@ node:
   hostPID: true
   driver:
     iscsiDirHostPath: /etc/iscsi
-    iscsiDirHostPathType: DirectoryOrCreate
+    iscsiDirHostPathType: ""
     
     extraEnv:
       - name: ISCSIADM_HOST_STRATEGY
