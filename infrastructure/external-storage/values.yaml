@@ -24,8 +24,10 @@ node:
       - name: ISCSIADM_HOST_PATH
         value: /usr/local/sbin/iscsiadm
 
-# --- DRIVER LOGIC ---
+# --- DRIVER CONFIGURATION ---
 driver:
-  config: {} # Leave this empty, Helm will ignore it
-  # Point Helm to the Sealed Secret you just created
+  # Mount the Sealed Secret we generated
   existingConfigSecret: truenas-csi-config
+  config:
+    # Helm requires this line to exist here to generate the iSCSI DaemonSet templates!
+    driver: truenas-api-iscsi
