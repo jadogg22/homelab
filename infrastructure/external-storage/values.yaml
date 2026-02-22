@@ -14,7 +14,7 @@ storageClasses:
 node:
   hostPID: true
   driver:
-    iscsiDirHostPath: /usr/local/etc/iscsi
+    iscsiDirHostPath: /etc/iscsi
     iscsiDirHostPathType: DirectoryOrCreate
     
     extraEnv:
