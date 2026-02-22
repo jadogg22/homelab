@@ -10,34 +10,10 @@ storageClasses:
     parameters:
       fsType: ext4
 
-controller:
-  driver:
-    extraEnv:
-      - name: TRUENAS_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: truenas-api-key
-            key: apiKey
-  extraEnv:
-    - name: TRUENAS_API_KEY
-      valueFrom:
-        secretKeyRef:
-          name: truenas-api-key
-          key: apiKey
-
-
 # --- NODE CONFIG (TALOS FIXES) ---
-
 node:
-  extraEnv:
-    - name: TRUENAS_API_KEY
-      valueFrom:
-        secretKeyRef:
-          name: truenas-api-key
-          key: apiKey
-
   hostPID: true
-  iscsiDirHostPath: /usr/local/etc/iscsi # Match the extension path
+  iscsiDirHostPath: /usr/local/etc/iscsi
   iscsiDirHostPathType: DirectoryOrCreate
   iscsiInfoDirHostPath: /usr/local/var/lib/iscsi
   iscsiInfoDirHostPathType: DirectoryOrCreate
@@ -50,27 +26,6 @@ node:
 
 # --- DRIVER LOGIC ---
 driver:
-  config:
-    driver: truenas-api-iscsi
-    httpConnection:
-      protocol: http
-      host: 10.0.1.50
-      port: 80
-      allowInsecure: true
-    apiKey: "{{ .Env.TRUENAS_API_KEY }}"
-
-    zfs:
-      datasetParentName: Storage/k8s-vols
-      detachedSnapshotsDatasetParentName: Storage/k8s-iscsi-snaps
-      zvolCompression: lz4
-      zvolDedup: off
-      zvolBlocksize: 16K
-
-    iscsi:
-      targetPortal: "10.0.1.50:3260"
-      baseName: "iqn.2005-10.org.freenas.ctl"
-      targetGroups:
-        - targetGroupPortalGroup: 1
-          targetGroupInitiatorGroup: 1
-          targetGroupAuthType: None
-      nameTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
+  config: {} # Leave this empty, Helm will ignore it
+  # Point Helm to the Sealed Secret you just created
+  existingConfigSecret: truenas-csi-config
