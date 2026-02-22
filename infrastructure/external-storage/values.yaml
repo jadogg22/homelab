@@ -40,8 +40,8 @@ driver:
       allowInsecure: true
 
     zfs:
-      datasetParentName: Storage
-      detachedSnapshotsDatasetParentName: ""
+      datasetParentName: Storage/k8s-vols
+      detachedSnapshotsDatasetParentName: Storage/k8s-iscsi-snaps
       zvolCompression: lz4
       zvolDedup: off
       zvolBlocksize: 16K
