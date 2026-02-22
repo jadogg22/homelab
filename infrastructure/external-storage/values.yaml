@@ -31,7 +31,7 @@ node:
 # --- DRIVER LOGIC ---
 driver:
   config:
-    driver: freenas-api-iscsi
+    driver: truenas-api-iscsi
     httpConnection:
       protocol: http
       host: 10.0.1.50
