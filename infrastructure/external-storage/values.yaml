@@ -13,7 +13,9 @@ storageClasses:
 # --- CONTROLLER CONFIG ---
 controller:
   driver:
-    image: democraticcsi/democratic-csi:v1.9.1
+    image:
+      repository: democraticcsi/democratic-csi
+      tag: v1.9.1
 
 # --- NODE CONFIG (TALOS FIXES) ---
 node:
