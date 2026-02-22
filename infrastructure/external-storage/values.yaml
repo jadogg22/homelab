@@ -10,9 +10,25 @@ storageClasses:
     parameters:
       fsType: ext4
 
+controller:
+  extraEnv:
+    - name: TRUENAS_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: truenas-api-key
+          key: apiKey
+
 
 # --- NODE CONFIG (TALOS FIXES) ---
+
 node:
+  extraEnv:
+    - name: TRUENAS_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: truenas-api-key
+          key: apiKey
+
   hostPID: true
   iscsiDirHostPath: /usr/local/etc/iscsi # Match the extension path
   iscsiDirHostPathType: DirectoryOrCreate
@@ -33,7 +49,7 @@ driver:
       protocol: http
       host: 10.0.1.50
       port: 80
-      apiKeySecret: truenas-api-key
+      apiKey: "{{ .Env.TRUENAS_API_KEY }}"
       allowInsecure: true
 
     zfs:
