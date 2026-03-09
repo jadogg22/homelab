@@ -10,7 +10,7 @@ spec:
       chart: app-template
       targetRevision: 3.2.1
       helm:
-        values:
+        valueFiles:
           - $values/charts/sonarr/values.yaml
 
     - repoURL: https://github.com/jadogg22/homelab.git

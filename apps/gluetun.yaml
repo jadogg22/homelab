@@ -10,7 +10,7 @@ spec:
       chart: app-template
       targetRevision: 3.2.1
       helm:
-        values:
+        valueFiles:
           # We pass our local values.yaml as the first value file
           - $values/charts/gluetun/values.yaml
 
