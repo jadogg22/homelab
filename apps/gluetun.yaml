@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gluetun
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://bjw-s.github.io/helm-charts
+      chart: app-template
+      targetRevision: 3.2.1
+      helm:
+        values:
+          # We pass our local values.yaml as the first value file
+          - $values/charts/gluetun/values.yaml
+
+    - repoURL: https://github.com/jadogg22/homelab.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

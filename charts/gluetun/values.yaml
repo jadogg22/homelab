@@ -1,0 +1,42 @@
+app-template:
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: qmcgaw/gluetun
+            tag: latest
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: "airvpn"
+            - name: VPN_TYPE
+              value: "wireguard"
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gluetun-vpn-creds
+                  key: WIREGUARD_PRIVATE_KEY
+            - name: WIREGUARD_PRESHARED_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gluetun-vpn-creds
+                  key: WIREGUARD_PRESHARED_KEY
+            - name: WIREGUARD_ADDRESSES
+              valueFrom:
+                secretKeyRef:
+                  name: gluetun-vpn-creds
+                  key: WIREGUARD_ADDRESSES
+            - name: FIREWALL_OUTBOUND_SUBNETS
+              value: "10.0.0.0/16" # Adjust to your local network
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+            privileged: true # Required for Wireguard
+
+  service:
+    main:
+      controller: main
+      ports:
+        http:
+          port: 8000
