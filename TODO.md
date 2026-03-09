@@ -1,60 +1,29 @@
 # 🛠️ Homelab Migration & SSO Master Plan
 
-### Phase 1: The Infrastructure (TrueNAS & Storage)
+### Phase 1: The Infrastructure (TrueNAS & Storage) ✅
+* [x] **Create NFS Share** on TrueNAS for `/media`.
+* [x] **Install NFS Provisioner** in Kubernetes (truenas-nfs-media).
 
-* [ ] **Create NFS Share** on TrueNAS for `/media`.
-* *Critical:* Set "Maproot User" to `root` (or your specific K8s `PUID`) to allow write access.
+### Phase 2: The Arr Stack (ArgoCD) 🚧
+* [x] **Deploy Gluetun + qBittorrent** (VPN Gateway).
+* [x] **Deploy Prowlarr** (Indexer Manager).
+* [x] **Deploy Sonarr** (TV Series).
+* [x] **Deploy Radarr** (Movies).
+* [x] **Deploy Lidarr** (Music).
+* [x] **Deploy Readarr** (Books).
+* [x] **Deploy FlareSolverr** (Cloudflare Bypass).
+* [x] **Deploy Bazarr** (Subtitles).
+* [x] **Setup Homepage Dashboard** with Media Stack.
+* [ ] **Configure FlareSolverr in Prowlarr** (Settings -> Indexers -> Add Proxy).
+* [ ] **Configure Bazarr** to connect to Sonarr/Radarr.
+* [ ] **Add Unpackerr** (Automatic Extraction).
 
+### Phase 3: Identity & SSO (Authentik)
+* [ ] **Deploy Authentik** via ArgoCD.
+* [ ] **Create Traefik Middleware** for Authentik.
+* [ ] **Reconfigure Ingresses** to use Authentik Middleware.
+* [ ] **Disable App Authentication** (move security to SSO).
 
-* [ ] **Install Jellyfin** on TrueNAS (via Apps/Docker).
-* Ensure it has access to the `/media` NFS share path.
-* Verify it is reachable at `http://YOUR_NAS_IP:8096`.
-
-
-
-### Phase 2: The Cluster "Bridge"
-
-* [ ] **Apply NFS PersistentVolume (PV)** in Kubernetes.
-* Create the `PersistentVolume` pointing to the TrueNAS IP.
-* Create the `PersistentVolumeClaim` (PVC) named `media-pvc`.
-
-
-* [ ] **Create Jellyfin "Bridge" Service.**
-* Apply the `Service` (ClusterIP) on port 8096.
-* Apply the `Endpoint` manually mapping the Service to `YOUR_NAS_IP`.
-* Apply the `Ingress` pointing to `jellyfin.jadogg.com` (using your existing Cert-Manager/Traefik).
-
-
-
-### Phase 3: The Arr Stack (ArgoCD)
-
-* [ ] **Create Parent Helm Chart.**
-* Set up the `Chart.yaml` and `values.yaml` structure.
-* Configure `apps` list (Sonarr, Radarr, Prowlarr) in `values.yaml`.
-
-
-* [ ] **Configure Child Apps Persistence.**
-* Update Helm values for Sonarr/Radarr to use `existingClaim: media-pvc`.
-
-
-* [ ] **Deploy via ArgoCD.**
-* Sync the parent application and verify all pods start and can see `/media`.
-
-
-
-### Phase 4: Identity & SSO (Authentik)
-
-* [ ] **Deploy Authentik** via ArgoCD (using the official Helm chart).
-* [ ] **Create Traefik Middleware.**
-* Define the `authentik-auth` Middleware in K8s (pointing to the Authentik Outpost).
-
-
-* [ ] **Reconfigure Ingresses.**
-* Add annotation `traefik.ingress.kubernetes.io/router.middlewares: media-authentik-auth@kubernetescrd` to Sonarr, Radarr, and Prowlarr Ingresses.
-
-
-* [ ] **Disable App Authentication.**
-* Log into Sonarr/Radarr manually one last time.
-* Go to **Settings > General > Security**.
-* Change Authentication to **None**.
-* *Test:* Verify that `https://sonarr.jadogg.com` now redirects to your Authentik login page.
+### Phase 4: Maintenance & Automation
+* [ ] **Setup Renovate** to keep container images updated.
+* [ ] **Setup Backup strategy** for Longhorn config volumes.

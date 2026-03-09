@@ -33,7 +33,7 @@ config:
         columns: 3
       Media Stack:
         style: row
-        columns: 5
+        columns: 4
       Infrastructure:
         style: row
         columns: 3
@@ -99,6 +99,22 @@ config:
               type: radarr
               url: http://radarr.default.svc.cluster.local:7878
               key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+        - Lidarr:
+            icon: lidarr.png
+            href: https://lidarr.jadogg.com
+            description: Music
+            widget:
+              type: lidarr
+              url: http://lidarr.default.svc.cluster.local:8686
+              key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
+        - Readarr:
+            icon: readarr.png
+            href: https://readarr.jadogg.com
+            description: Books
+            widget:
+              type: readarr
+              url: http://readarr.default.svc.cluster.local:8787
+              key: "{{HOMEPAGE_VAR_READARR_KEY}}"
         - Bazarr:
             icon: bazarr.png
             href: https://bazarr.jadogg.com
