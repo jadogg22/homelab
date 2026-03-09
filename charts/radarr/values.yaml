@@ -33,6 +33,9 @@ ingress:
         paths:
           - path: /
             pathType: Prefix
+            service:
+              identifier: main
+              port: http
     tls:
       - secretName: jadogg-wildcard-cert
         hosts:
