@@ -10,7 +10,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/onedr0p/radarr
-          tag: 6.0.4
+          tag: rolling
         env:
           - name: RADARR__PORT
             value: "7878"
