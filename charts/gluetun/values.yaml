@@ -4,6 +4,9 @@ controllers:
       securityContext:
         fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
+      sysctls:
+        - name: net.ipv4.conf.all.src_valid_mark
+          value: "1"
     containers:
       main:
         image:
@@ -30,7 +33,7 @@ controllers:
                 name: gluetun-vpn-creds
                 key: WIREGUARD_ADDRESSES
           - name: FIREWALL_OUTBOUND_SUBNETS
-            value: "10.0.0.0/16" # Your local network
+            value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12" # Local + Pod + Service CIDRs
         securityContext:
           runAsUser: 0
           capabilities:
