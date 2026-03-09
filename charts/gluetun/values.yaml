@@ -93,8 +93,8 @@ app-template:
     downloads:
       enabled: true
       type: persistentVolumeClaim
-      storageClass: truenas-iscsi
-      accessMode: ReadWriteOnce
+      storageClass: truenas-nfs-media
+      accessMode: ReadWriteMany
       size: 500Gi # Adjust this to your needs
       advancedMounts:
         main:
