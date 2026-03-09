@@ -27,12 +27,28 @@ app-template:
                   name: gluetun-vpn-creds
                   key: WIREGUARD_ADDRESSES
             - name: FIREWALL_OUTBOUND_SUBNETS
-              value: "10.0.0.0/16" # Adjust to your local network
+              value: "10.0.0.0/8" # Adjust to your local network
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
             privileged: true # Required for Wireguard
+
+        qbittorrent:
+          image:
+            repository: ghcr.io/onedr0p/qbittorrent
+            tag: 5.0.4
+          env:
+            - name: QBITTORRENT__PORT
+              value: "8080"
+            - name: QBITTORRENT__BT_PORT
+              value: "50413"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 256Mi
+            limits:
+              memory: 2Gi
 
   service:
     main:
@@ -40,3 +56,29 @@ app-template:
       ports:
         http:
           port: 8000
+        qbittorrent:
+          port: 8080
+
+  persistence:
+    config:
+      enabled: true
+      type: persistentVolumeClaim
+      storageClass: longhorn-replicated
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      advancedMounts:
+        main:
+          qbittorrent:
+            - path: /config
+
+    downloads:
+      enabled: true
+      type: persistentVolumeClaim
+      storageClass: truenas-iscsi
+      accessMode: ReadWriteOnce
+      size: 500Gi # Adjust this to your needs
+      advancedMounts:
+        main:
+          qbittorrent:
+            - path: /downloads
+
