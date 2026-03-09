@@ -29,7 +29,7 @@ controllers:
                 name: gluetun-vpn-creds
                 key: WIREGUARD_ADDRESSES
           - name: FIREWALL_OUTBOUND_SUBNETS
-            value: "10.0.0.0/8" # Adjust to your local network
+            value: "10.0.0.0/16" # Your local network
         securityContext:
           runAsUser: 0
           capabilities:
