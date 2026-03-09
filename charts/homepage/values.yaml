@@ -33,7 +33,7 @@ config:
         columns: 3
       Media Stack:
         style: row
-        columns: 4
+        columns: 5
       Infrastructure:
         style: row
         columns: 3
@@ -99,6 +99,14 @@ config:
               type: radarr
               url: http://radarr.default.svc.cluster.local:7878
               key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+        - Bazarr:
+            icon: bazarr.png
+            href: https://bazarr.jadogg.com
+            description: Subtitles
+            widget:
+              type: bazarr
+              url: http://bazarr.default.svc.cluster.local:6767
+              key: "{{HOMEPAGE_VAR_BAZARR_KEY}}"
 
     - Infrastructure:
         - Argo CD:
