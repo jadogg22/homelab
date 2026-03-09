@@ -1,5 +1,10 @@
 controllers:
   main:
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
     containers:
       main:
         image:
@@ -9,7 +14,7 @@ controllers:
           - name: PROWLARR__PORT
             value: "9696"
           - name: TZ
-            value: "UTC" # Change to your timezone if you want
+            value: "UTC"
         resources:
           requests:
             cpu: 10m

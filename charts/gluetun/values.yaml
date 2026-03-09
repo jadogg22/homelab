@@ -1,5 +1,8 @@
 controllers:
   main:
+    podSecurityContext:
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
     containers:
       main:
         image:
@@ -28,6 +31,7 @@ controllers:
           - name: FIREWALL_OUTBOUND_SUBNETS
             value: "10.0.0.0/8" # Adjust to your local network
         securityContext:
+          runAsUser: 0
           capabilities:
             add:
               - NET_ADMIN
@@ -42,6 +46,9 @@ controllers:
             value: "8080"
           - name: QBITTORRENT__BT_PORT
             value: "50413"
+        securityContext:
+          runAsUser: 568
+          runAsGroup: 568
         resources:
           requests:
             cpu: 10m
