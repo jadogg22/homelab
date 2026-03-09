@@ -9,11 +9,13 @@ controllers:
     containers:
       main:
         image:
-          repository: ghcr.io/onedr0p/lidarr
-          tag: rolling
+          repository: ghcr.io/linuxserver/lidarr
+          tag: latest
         env:
-          - name: LIDARR__PORT
-            value: "8686"
+          - name: PUID
+            value: "568"
+          - name: PGID
+            value: "568"
           - name: TZ
             value: "UTC"
         resources:

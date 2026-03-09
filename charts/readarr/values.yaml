@@ -9,11 +9,13 @@ controllers:
     containers:
       main:
         image:
-          repository: ghcr.io/onedr0p/readarr
-          tag: rolling
+          repository: ghcr.io/linuxserver/readarr
+          tag: develop
         env:
-          - name: READARR__PORT
-            value: "8787"
+          - name: PUID
+            value: "568"
+          - name: PGID
+            value: "568"
           - name: TZ
             value: "UTC"
         resources:
