@@ -25,6 +25,22 @@ app-template:
         http:
           port: 9696
 
+  ingress:
+    main:
+      enabled: true
+      className: traefik
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      hosts:
+        - host: prowlarr.jadogg.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: jadogg-wildcard-cert
+          hosts:
+            - prowlarr.jadogg.com
+
   persistence:
     config:
       enabled: true
