@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: truenas-nfs-media
+  resources:
+    requests:
+      storage: 1Ti # Size doesn't strictly matter for NFS subdir, but set it large

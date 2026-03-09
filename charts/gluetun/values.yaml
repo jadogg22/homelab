@@ -100,10 +100,9 @@ persistence:
   downloads:
     enabled: true
     type: persistentVolumeClaim
-    storageClass: truenas-nfs-media
-    accessMode: ReadWriteMany
-    size: 500Gi # Adjust this to your needs
+    existingClaim: media-pvc
     advancedMounts:
       main:
         qbittorrent:
           - path: /downloads
+

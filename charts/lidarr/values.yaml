@@ -62,8 +62,7 @@ persistence:
   media:
     enabled: true
     type: persistentVolumeClaim
-    storageClass: truenas-nfs-media
-    accessMode: ReadWriteMany
-    size: 500Gi
+    existingClaim: media-pvc
     globalMounts:
       - path: /data
+
