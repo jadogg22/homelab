@@ -1,11 +1,8 @@
-# values.yaml
-
 # 1. Access & Security
-# Ingress Configuration
 ingress:
-  main: 
+  main:
     enabled: true
-    ingressClassName: traefik
+    className: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     hosts:
@@ -17,6 +14,7 @@ ingress:
       - secretName: jadogg-wildcard-cert
         hosts:
           - home.jadogg.com
+
 # 2. Permissions (Required for K8s widget)
 serviceAccount:
   create: true
@@ -24,15 +22,22 @@ serviceAccount:
 rbac:
   create: true
 
-# 3. Dashboard Layout
+# 3. Dashboard Configuration
 config:
   settings:
-    title: Jadogg Lab
+    title: Jadogg Homelab
+    background: https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop
     layout:
       Networking:
         style: row
+        columns: 3
+      Media Stack:
+        style: row
         columns: 4
-  
+      Infrastructure:
+        style: row
+        columns: 3
+
   widgets:
     - kubernetes:
         cluster:
@@ -43,18 +48,71 @@ config:
           show: true
           cpu: true
           memory: true
-    - search:
-        provider: duckduckgo
-        target: _blank
+    - datetime:
+        format:
+          timeStyle: short
+          dateStyle: long
 
   services:
     - Networking:
+        - AdGuard Home:
+            icon: adguard-home.png
+            href: https://adguard.jadogg.com
+            description: Network DNS Filter
+            widget:
+              type: adguard
+              url: http://adguard-home.default.svc.cluster.local
         - Pi-hole:
             icon: pi-hole.png
             href: https://pihole.jadogg.com
-            description: DNS Blocker
+            description: Secondary DNS
+
+    - Media Stack:
+        - qBittorrent:
+            icon: qbittorrent.png
+            href: https://qb.jadogg.com
+            description: Torrent Client
+            widget:
+              type: qbittorrent
+              url: http://gluetun.default.svc.cluster.local:8080
+        - Prowlarr:
+            icon: prowlarr.png
+            href: https://prowlarr.jadogg.com
+            description: Indexer Manager
+            widget:
+              type: prowlarr
+              url: http://prowlarr.default.svc.cluster.local:9696
+              key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+        - Sonarr:
+            icon: sonarr.png
+            href: https://sonarr.jadogg.com
+            description: TV Series
+            widget:
+              type: sonarr
+              url: http://sonarr.default.svc.cluster.local:8989
+              key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+        - Radarr:
+            icon: radarr.png
+            href: https://radarr.jadogg.com
+            description: Movies
+            widget:
+              type: radarr
+              url: http://radarr.default.svc.cluster.local:7878
+              key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+
+    - Infrastructure:
+        - Argo CD:
+            icon: argocd.png
+            href: https://argocd.jadogg.com
+            description: GitOps Manager
+        - TrueNAS:
+            icon: truenas.png
+            href: https://truenas.jadogg.com
+            description: Storage Backend
+        - Portainer:
+            icon: portainer.png
+            href: https://portainer.jadogg.com
+            description: Container Management
 
 env:
   HOMEPAGE_ALLOWED_HOSTS: "home.jadogg.com"
-
-
