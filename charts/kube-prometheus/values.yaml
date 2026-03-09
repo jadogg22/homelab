@@ -25,7 +25,6 @@ grafana:
 prometheus:
   enabled: true
   
-  # FIX: Point to legacy repository to resolve ImagePullBackOff
   image:
     registry: docker.io
     repository: bitnamilegacy/prometheus
@@ -55,7 +54,6 @@ prometheus:
 alertmanager:
   enabled: true
   
-  # FIX: Point to legacy repository
   image:
     registry: docker.io
     repository: bitnamilegacy/alertmanager
@@ -79,7 +77,6 @@ alertmanager:
 operator:
   enabled: true
   
-  # FIX: Point to legacy repository
   image:
     registry: docker.io
     repository: bitnamilegacy/prometheus-operator
