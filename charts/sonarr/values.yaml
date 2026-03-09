@@ -1,57 +1,56 @@
-app-template:
-  controllers:
-    main:
-      containers:
-        main:
-          image:
-            repository: ghcr.io/onedr0p/sonarr
-            tag: 4.0.13
-          env:
-            - name: SONARR__PORT
-              value: "8989"
-          resources:
-            requests:
-              cpu: 10m
-              memory: 256Mi
-            limits:
-              memory: 1Gi
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/onedr0p/sonarr
+          tag: 4.0.13
+        env:
+          - name: SONARR__PORT
+            value: "8989"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
 
-  service:
-    main:
-      controller: main
-      ports:
-        http:
-          port: 8989
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 8989
 
-  ingress:
-    main:
-      enabled: true
-      className: traefik
-      annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      hosts:
-        - host: sonarr.jadogg.com
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - secretName: jadogg-wildcard-cert
-          hosts:
-            - sonarr.jadogg.com
+ingress:
+  main:
+    enabled: true
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: sonarr.jadogg.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - sonarr.jadogg.com
 
-  persistence:
-    config:
-      enabled: true
-      type: persistentVolumeClaim
-      storageClass: longhorn-replicated
-      accessMode: ReadWriteOnce
-      size: 2Gi
+persistence:
+  config:
+    enabled: true
+    type: persistentVolumeClaim
+    storageClass: longhorn-replicated
+    accessMode: ReadWriteOnce
+    size: 2Gi
 
-    media:
-      enabled: true
-      type: persistentVolumeClaim
-      storageClass: truenas-nfs-media
-      accessMode: ReadWriteMany
-      size: 500Gi
-      globalMounts:
-        - path: /data
+  media:
+    enabled: true
+    type: persistentVolumeClaim
+    storageClass: truenas-nfs-media
+    accessMode: ReadWriteMany
+    size: 500Gi
+    globalMounts:
+      - path: /data

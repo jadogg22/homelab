@@ -1,50 +1,49 @@
-app-template:
-  controllers:
-    main:
-      containers:
-        main:
-          image:
-            repository: ghcr.io/onedr0p/prowlarr
-            tag: 1.31.2
-          env:
-            - name: PROWLARR__PORT
-              value: "9696"
-            - name: TZ
-              value: "UTC" # Change to your timezone if you want
-          resources:
-            requests:
-              cpu: 10m
-              memory: 128Mi
-            limits:
-              memory: 512Mi
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/onedr0p/prowlarr
+          tag: 1.31.2
+        env:
+          - name: PROWLARR__PORT
+            value: "9696"
+          - name: TZ
+            value: "UTC" # Change to your timezone if you want
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
 
-  service:
-    main:
-      controller: main
-      ports:
-        http:
-          port: 9696
+service:
+  main:
+    controller: main
+    ports:
+      http:
+        port: 9696
 
-  ingress:
-    main:
-      enabled: true
-      className: traefik
-      annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      hosts:
-        - host: prowlarr.jadogg.com
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - secretName: jadogg-wildcard-cert
-          hosts:
-            - prowlarr.jadogg.com
+ingress:
+  main:
+    enabled: true
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - host: prowlarr.jadogg.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jadogg-wildcard-cert
+        hosts:
+          - prowlarr.jadogg.com
 
-  persistence:
-    config:
-      enabled: true
-      type: persistentVolumeClaim
-      storageClass: longhorn-replicated
-      accessMode: ReadWriteOnce
-      size: 2Gi
+persistence:
+  config:
+    enabled: true
+    type: persistentVolumeClaim
+    storageClass: longhorn-replicated
+    accessMode: ReadWriteOnce
+    size: 2Gi
