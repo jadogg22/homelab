@@ -1,6 +1,6 @@
 controllers:
   main:
-    defaultPodOptions:
+    pod:
       securityContext:
         runAsUser: 568
         runAsGroup: 568

@@ -1,6 +1,6 @@
 controllers:
   main:
-    defaultPodOptions:
+    pod:
       securityContext:
         fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
