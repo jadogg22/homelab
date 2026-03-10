@@ -3,6 +3,7 @@
 ### Phase 1: The Infrastructure (TrueNAS & Storage) ✅
 * [x] **Create NFS Share** on TrueNAS for `/media`.
 * [x] **Install NFS Provisioner** in Kubernetes (truenas-nfs-media).
+* [ ] **Patch Talos Nodes** to allow unsafe sysctls (`net.ipv4.conf.all.src_valid_mark`).
 
 ### Phase 2: The Arr Stack (ArgoCD) 🚧
 * [x] **Deploy Gluetun + qBittorrent** (VPN Gateway).

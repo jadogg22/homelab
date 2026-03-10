@@ -4,9 +4,9 @@ controllers:
       securityContext:
         fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
-      sysctls:
-        - name: net.ipv4.conf.all.src_valid_mark
-          value: "1"
+        sysctls:
+          - name: net.ipv4.conf.all.src_valid_mark
+            value: "1"
     containers:
       main:
         image:
