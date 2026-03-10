@@ -56,3 +56,7 @@ persistence:
     storageClass: longhorn-replicated
     accessMode: ReadWriteOnce
     size: 2Gi
+    advancedMounts:
+      main:
+        main:
+          - path: /app/config
