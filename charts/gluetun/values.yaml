@@ -17,6 +17,10 @@ controllers:
             value: "airvpn"
           - name: VPN_TYPE
             value: "wireguard"
+          - name: VPN_PORT_FORWARDING
+            value: "on"
+          - name: VPN_PORT_FORWARDING_LISTENING_PORT
+            value: "12332"
           - name: WIREGUARD_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
@@ -49,8 +53,9 @@ controllers:
           - name: QBITTORRENT__PORT
             value: "8080"
           - name: QBITTORRENT__BT_PORT
-            value: "50413"
+            value: "12332"
         securityContext:
+
           runAsUser: 568
           runAsGroup: 568
         resources:
