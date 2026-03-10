@@ -65,4 +65,4 @@ persistence:
     existingClaim: media-pvc
     globalMounts:
       - path: /data
-
+      - path: /downloads
