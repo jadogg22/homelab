@@ -14,6 +14,7 @@
 * [x] **Deploy Readarr** (Books).
 * [x] **Deploy FlareSolverr** (Cloudflare Bypass).
 * [x] **Deploy Bazarr** (Subtitles).
+* [x] **Deploy Jellyseerr** (Media Requests).
 * [x] **Setup Homepage Dashboard** with Media Stack.
 * [ ] **Configure FlareSolverr in Prowlarr** (Settings -> Indexers -> Add Proxy).
 * [ ] **Configure Bazarr** to connect to Sonarr/Radarr.
