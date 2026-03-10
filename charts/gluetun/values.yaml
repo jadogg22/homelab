@@ -17,10 +17,6 @@ controllers:
             value: "airvpn"
           - name: VPN_TYPE
             value: "wireguard"
-          - name: VPN_PORT_FORWARDING
-            value: "on"
-          - name: VPN_PORT_FORWARDING_LISTENING_PORT
-            value: "12332"
           - name: WIREGUARD_MTU
             value: "1320"
           - name: VPN_IPV6
