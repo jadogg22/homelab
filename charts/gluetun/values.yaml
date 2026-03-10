@@ -44,6 +44,8 @@ controllers:
             value: "off"
           - name: HEALTH_SUCCESS_WAIT_DURATION
             value: "30s"
+          - name: FIREWALL_VPN_INPUT_PORTS
+            value: "12332"
         securityContext:
           runAsUser: 0
           capabilities:
