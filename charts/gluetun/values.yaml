@@ -40,6 +40,10 @@ controllers:
             value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12"
           - name: ROUTE_ALLOWED_IPS
             value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12"
+          - name: HEALTH_VPN_RESTART_ON_FAILURE
+            value: "off"
+          - name: HEALTH_SUCCESS_WAIT_DURATION
+            value: "30s"
         securityContext:
           runAsUser: 0
           capabilities:
