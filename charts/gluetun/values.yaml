@@ -21,6 +21,10 @@ controllers:
             value: "on"
           - name: VPN_PORT_FORWARDING_LISTENING_PORT
             value: "12332"
+          - name: WIREGUARD_MTU
+            value: "1320"
+          - name: VPN_IPV6
+            value: "off"
           - name: WIREGUARD_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
@@ -37,7 +41,9 @@ controllers:
                 name: gluetun-vpn-creds
                 key: WIREGUARD_ADDRESSES
           - name: FIREWALL_OUTBOUND_SUBNETS
-            value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12" # Local + Pod + Service CIDRs
+            value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12"
+          - name: ROUTE_ALLOWED_IPS
+            value: "10.0.0.0/16,10.244.0.0/16,10.96.0.0/12"
         securityContext:
           runAsUser: 0
           capabilities:
