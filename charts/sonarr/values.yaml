@@ -10,7 +10,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/onedr0p/sonarr
-          tag: 4.0.13
+          tag: rolling
         env:
           - name: SONARR__PORT
             value: "8989"
