@@ -31,12 +31,15 @@ config:
       Networking:
         style: row
         columns: 3
-      Media Stack:
+      Media:
+        style: row
+        columns: 2
+      Pirate:
         style: row
         columns: 4
       Infrastructure:
         style: row
-        columns: 3
+        columns: 4
 
   widgets:
     - kubernetes:
@@ -67,7 +70,15 @@ config:
             href: https://pihole.jadogg.com
             description: Secondary DNS
 
-    - Media Stack:
+    - Media:
+        - Jellyfin:
+            icon: jellyfin.png
+            href: https://jellyfin.jadogg.com
+            description: Media Server
+            widget:
+              type: jellyfin
+              url: http://10.0.1.50:30013
+              key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
         - Jellyseerr:
             icon: jellyseerr.png
             href: https://requests.jadogg.com
@@ -76,6 +87,8 @@ config:
               type: jellyseerr
               url: http://jellyseerr.default.svc.cluster.local:5055
               key: "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}"
+
+    - Pirate:
         - qBittorrent:
             icon: qbittorrent.png
             href: https://qb.jadogg.com
@@ -145,6 +158,10 @@ config:
             icon: portainer.png
             href: https://portainer.jadogg.com
             description: Container Management
+        - Vaultwarden:
+            icon: vaultwarden.png
+            href: https://vaultwarden.jadogg.com
+            description: Password Manager
 
 env:
   HOMEPAGE_ALLOWED_HOSTS: "home.jadogg.com"
