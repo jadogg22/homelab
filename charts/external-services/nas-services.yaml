@@ -56,9 +56,9 @@ metadata:
   name: nas-ingress
   namespace: traefik
   annotations:
-    kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
+  ingressClassName: traefik
   tls:
     - secretName: jadogg-wildcard-cert
       hosts:

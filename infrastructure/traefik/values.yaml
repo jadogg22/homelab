@@ -31,6 +31,10 @@ ports:
     # TLS configuration remains here
     tls:
       enabled: true
+      options: "" # Reference to a TLSOption if needed
+    # Set default certificate
+    certificates:
+      - secretName: jadogg-wildcard-cert
 
 # 4. Logs/Persistence
 persistence:
