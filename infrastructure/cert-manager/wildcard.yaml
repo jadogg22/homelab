@@ -5,7 +5,7 @@ metadata:
   name: jadogg-wildcard
   namespace: traefik # Store it where Traefik lives
 spec:
-  secretName: jadogg-wildcard-cert # This is the secret name referenced in Traefik config
+  secretName: jadogg-wildcard-cert-v2 # Incrementing version to force refresh
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
