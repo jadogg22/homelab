@@ -16,6 +16,11 @@ controllers:
             if [ ! -f /config/configuration.yaml ]; then
               cat > /config/configuration.yaml <<'EOF'
             default_config:
+            EOF
+            fi
+            if ! grep -q '^ *use_x_forwarded_for:' /config/configuration.yaml; then
+              cat >> /config/configuration.yaml <<'EOF'
+
             http:
               use_x_forwarded_for: true
               trusted_proxies:
