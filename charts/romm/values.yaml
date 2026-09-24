@@ -9,7 +9,7 @@ controllers:
           - name: ROMM_DB_DRIVER
             value: mariadb
           - name: DB_HOST
-            value: romm-db.default.svc.cluster.local
+            value: romm-db-mariadb.default.svc.cluster.local
           - name: DB_PORT
             value: "3306"
           - name: DB_NAME
