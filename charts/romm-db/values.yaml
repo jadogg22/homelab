@@ -1,0 +1,15 @@
+auth:
+  database: romm
+  username: romm
+  existingSecret: mariadb-secrets
+  existingSecretRootPasswordKey: mariadb-root-password
+  existingSecretPasswordKey: mariadb-password
+
+primary:
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: longhorn-replicated
+
+  service:
+    type: ClusterIP

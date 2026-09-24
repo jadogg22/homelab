@@ -55,6 +55,9 @@ config:
       Media:
         style: row
         columns: 4
+      Home Automation:
+        style: row
+        columns: 3
       Automation:
         style: row
         columns: 4
@@ -107,6 +110,18 @@ config:
             href: https://requests.jadogg.com
             description: Media Requests
             siteMonitor: https://requests.jadogg.com
+        - RomM:
+            icon: romm.png
+            href: https://romm.jadogg.com
+            description: Retro Game Library
+            siteMonitor: https://romm.jadogg.com
+
+    - Home Automation:
+        - Home Assistant:
+            icon: home-assistant.png
+            href: https://homeassistant.jadogg.com
+            description: Home Automation Hub
+            siteMonitor: https://homeassistant.jadogg.com
 
     - Automation:
         - qBittorrent:
