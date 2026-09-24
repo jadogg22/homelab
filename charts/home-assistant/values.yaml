@@ -30,6 +30,9 @@ controllers:
                 - 172.16.0.0/12
                 - 192.168.0.0/16
             EOF
+            elif ! grep -q '10.244.2.240/32' /config/configuration.yaml; then
+              sed -i '/^  trusted_proxies:$/a\    - 10.244.0.0/16' /config/configuration.yaml
+              sed -i '/^  trusted_proxies:$/a\    - 10.244.2.240/32' /config/configuration.yaml
             fi
         securityContext:
           runAsUser: 0
