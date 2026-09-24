@@ -3,6 +3,31 @@ controllers:
     pod:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+    initContainers:
+      init-config:
+        image:
+          repository: busybox
+          tag: "1.36"
+        command:
+          - /bin/sh
+          - -c
+        args:
+          - |
+            if [ ! -f /config/configuration.yaml ]; then
+              cat > /config/configuration.yaml <<'EOF'
+            default_config:
+            http:
+              use_x_forwarded_for: true
+              trusted_proxies:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+            EOF
+            fi
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+          allowPrivilegeEscalation: false
     containers:
       main:
         image:
@@ -53,5 +78,7 @@ persistence:
     size: 10Gi
     advancedMounts:
       main:
+        init-config:
+          - path: /config
         main:
           - path: /config
