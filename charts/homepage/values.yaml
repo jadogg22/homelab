@@ -14,31 +14,56 @@ ingress:
       - hosts:
           - home.jadogg.com
 
-# 2. Permissions (Required for K8s widget)
+# 2. Permissions (Required for Kubernetes integration)
+enableRbac: true
 serviceAccount:
   create: true
   name: homepage
-rbac:
-  create: true
 
 # 3. Dashboard Configuration
 config:
   settings:
     title: Jadogg Homelab
-    background: https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop
+    description: Your private cloud, at a glance.
+    background:
+      image: https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop
+      blur: sm
+      saturate: 75
+      brightness: 50
+      opacity: 60
+    theme: dark
+    color: slate
+    headerStyle: boxedWidgets
+    cardStyle: hairline
+    blockStyle: refined
+    font: plexData
+    iconStyle: theme
+    statusStyle: dot
+    useEqualHeights: true
+    fullWidth: true
+    maxGroupColumns: 6
+    hideVersion: true
+    disableIndexing: true
+    quicklaunch:
+      searchDescriptions: true
+      hideInternetSearch: true
+      mobileButtonPosition: bottom-right
     layout:
-      Networking:
+      Networking & Access:
         style: row
         columns: 3
       Media:
         style: row
-        columns: 2
-      Pirate:
+        columns: 4
+      Automation:
         style: row
         columns: 4
       Infrastructure:
         style: row
         columns: 4
+
+  kubernetes:
+    mode: cluster
 
   widgets:
     - kubernetes:
@@ -50,117 +75,97 @@ config:
           show: true
           cpu: true
           memory: true
+    - search:
+        provider: duckduckgo
+        target: _blank
     - datetime:
         format:
           timeStyle: short
           dateStyle: long
 
   services:
-    - Networking:
+    - Networking & Access:
         - AdGuard Home:
             icon: adguard-home.png
             href: https://adguard.jadogg.com
             description: Network DNS Filter
-            widget:
-              type: adguard
-              url: http://adguard-home.default.svc.cluster.local
+            siteMonitor: https://adguard.jadogg.com
         - Pi-hole:
             icon: pi-hole.png
             href: https://pihole.jadogg.com
             description: Secondary DNS
+            siteMonitor: https://pihole.jadogg.com
 
     - Media:
         - Jellyfin:
             icon: jellyfin.png
             href: https://jellyfin.jadogg.com
             description: Media Server
-            widget:
-              type: jellyfin
-              url: http://10.0.1.50:30013
-              key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
+            siteMonitor: https://jellyfin.jadogg.com
         - Jellyseerr:
             icon: jellyseerr.png
             href: https://requests.jadogg.com
             description: Media Requests
-            widget:
-              type: jellyseerr
-              url: http://jellyseerr.default.svc.cluster.local:5055
-              key: "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}"
+            siteMonitor: https://requests.jadogg.com
 
-    - Pirate:
+    - Automation:
         - qBittorrent:
             icon: qbittorrent.png
             href: https://qb.jadogg.com
             description: Torrent Client
-            widget:
-              type: qbittorrent
-              url: http://gluetun.default.svc.cluster.local:8080
+            siteMonitor: https://qb.jadogg.com
         - Prowlarr:
             icon: prowlarr.png
             href: https://prowlarr.jadogg.com
             description: Indexer Manager
-            widget:
-              type: prowlarr
-              url: http://prowlarr.default.svc.cluster.local:9696
-              key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+            siteMonitor: https://prowlarr.jadogg.com
         - Sonarr:
             icon: sonarr.png
             href: https://sonarr.jadogg.com
             description: TV Series
-            widget:
-              type: sonarr
-              url: http://sonarr.default.svc.cluster.local:8989
-              key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+            siteMonitor: https://sonarr.jadogg.com
         - Radarr:
             icon: radarr.png
             href: https://radarr.jadogg.com
             description: Movies
-            widget:
-              type: radarr
-              url: http://radarr.default.svc.cluster.local:7878
-              key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+            siteMonitor: https://radarr.jadogg.com
         - Lidarr:
             icon: lidarr.png
             href: https://lidarr.jadogg.com
             description: Music
-            widget:
-              type: lidarr
-              url: http://lidarr.default.svc.cluster.local:8686
-              key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
+            siteMonitor: https://lidarr.jadogg.com
         - Readarr:
             icon: readarr.png
             href: https://readarr.jadogg.com
             description: Books
-            widget:
-              type: readarr
-              url: http://readarr.default.svc.cluster.local:8787
-              key: "{{HOMEPAGE_VAR_READARR_KEY}}"
+            siteMonitor: https://readarr.jadogg.com
         - Bazarr:
             icon: bazarr.png
             href: https://bazarr.jadogg.com
             description: Subtitles
-            widget:
-              type: bazarr
-              url: http://bazarr.default.svc.cluster.local:6767
-              key: "{{HOMEPAGE_VAR_BAZARR_KEY}}"
+            siteMonitor: https://bazarr.jadogg.com
 
     - Infrastructure:
         - Argo CD:
             icon: argocd.png
             href: https://argocd.jadogg.com
             description: GitOps Manager
+            siteMonitor: https://argocd.jadogg.com
         - TrueNAS:
             icon: truenas.png
             href: https://truenas.jadogg.com
             description: Storage Backend
+            siteMonitor: https://truenas.jadogg.com
         - Portainer:
             icon: portainer.png
             href: https://portainer.jadogg.com
             description: Container Management
+            siteMonitor: https://portainer.jadogg.com
         - Vaultwarden:
             icon: vaultwarden.png
             href: https://vaultwarden.jadogg.com
             description: Password Manager
+            siteMonitor: https://vaultwarden.jadogg.com
 
 env:
   HOMEPAGE_ALLOWED_HOSTS: "home.jadogg.com"
