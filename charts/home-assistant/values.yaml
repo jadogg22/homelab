@@ -6,21 +6,19 @@ controllers:
     initContainers:
       init-config:
         image:
-          repository: busybox
-          tag: "1.36"
+          repository: ghcr.io/home-assistant/home-assistant
+          tag: stable
         command:
-          - /bin/sh
+          - python3
           - -c
         args:
           - |
-            if [ ! -f /config/configuration.yaml ]; then
-              cat > /config/configuration.yaml <<'EOF'
-            default_config:
-            EOF
-            fi
-            if ! grep -q '^ *use_x_forwarded_for:' /config/configuration.yaml; then
-              cat >> /config/configuration.yaml <<'EOF'
+            import json
+            import os
+            from pathlib import Path
 
+            config_path = Path("/config/configuration.yaml")
+            proxy_config = """
             http:
               use_x_forwarded_for: true
               trusted_proxies:
@@ -29,11 +27,28 @@ controllers:
                 - 10.244.2.240/32
                 - 172.16.0.0/12
                 - 192.168.0.0/16
-            EOF
-            elif ! grep -q '10.244.2.240/32' /config/configuration.yaml; then
-              sed -i '/^  trusted_proxies:$/a\    - 10.244.0.0/16' /config/configuration.yaml
-              sed -i '/^  trusted_proxies:$/a\    - 10.244.2.240/32' /config/configuration.yaml
-            fi
+            """
+            if not config_path.exists():
+                config_path.write_text("default_config:\n" + proxy_config)
+            elif "use_x_forwarded_for:" not in config_path.read_text():
+                with config_path.open("a") as config_file:
+                    config_file.write(proxy_config)
+
+            storage_path = Path("/config/.storage/http")
+            if storage_path.exists():
+                data = json.loads(storage_path.read_text())
+                stable = data.setdefault("data", {}).setdefault("stable", {})
+                stable["use_x_forwarded_for"] = True
+                stable["trusted_proxies"] = [
+                    "10.0.0.0/8",
+                    "10.244.0.0/16",
+                    "10.244.2.240/32",
+                    "172.16.0.0/12",
+                    "192.168.0.0/16",
+                ]
+                temp_path = storage_path.with_suffix(".tmp")
+                temp_path.write_text(json.dumps(data, indent=2) + "\n")
+                os.replace(temp_path, storage_path)
         securityContext:
           runAsUser: 0
           runAsGroup: 0
