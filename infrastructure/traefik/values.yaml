@@ -32,9 +32,14 @@ ports:
     tls:
       enabled: true
       options: "" # Reference to a TLSOption if needed
-    # Set default certificate
-    certificates:
-      - secretName: jadogg-wildcard-cert-v2
+
+# Use the cert-manager-managed wildcard certificate as Traefik's cluster-wide
+# fallback. Ingress TLS Secrets are namespace-scoped, so routes should not
+# reference this Secret directly from other namespaces.
+tlsStore:
+  default:
+    defaultCertificate:
+      secretName: jadogg-wildcard-cert-v2
 
 # 4. Logs/Persistence
 persistence:

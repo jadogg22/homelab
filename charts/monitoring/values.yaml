@@ -20,8 +20,7 @@ grafana:
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - grafana.jadogg.com
 
   persistence:
@@ -59,8 +58,7 @@ prometheus:
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - prometheus.jadogg.com
 
 # ---------------------------------------------------------------------

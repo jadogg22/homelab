@@ -97,8 +97,7 @@ ingress:
               identifier: main
               port: qbittorrent
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - qb.jadogg.com
 
 persistence:
@@ -121,4 +120,3 @@ persistence:
       main:
         qbittorrent:
           - path: /downloads
-

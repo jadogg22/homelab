@@ -44,8 +44,7 @@ ingress:
           - path: /
             pathType: Prefix
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - adguard.jadogg.com
 
 controllers:

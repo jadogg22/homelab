@@ -17,7 +17,6 @@ grafana:
     extraTls:
       - hosts:
           - grafana.jadogg.com
-        secretName: jadogg-wildcard-cert
 
 # ---------------------------------------------------------------------
 # 2. Prometheus Configuration
@@ -40,7 +39,6 @@ prometheus:
     extraTls:
       - hosts:
           - prometheus.jadogg.com
-        secretName: jadogg-wildcard-cert
 
   persistence:
     enabled: true
@@ -69,7 +67,6 @@ alertmanager:
     extraTls:
       - hosts:
           - alerts.jadogg.com
-        secretName: jadogg-wildcard-cert
 
 # ---------------------------------------------------------------------
 # 4. Operator Configuration

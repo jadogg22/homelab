@@ -28,8 +28,7 @@ ingress:
   hosts:
     - pihole.jadogg.com
   tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
+    - hosts:
         - pihole.jadogg.com
 
 # 5. Resources / Admin

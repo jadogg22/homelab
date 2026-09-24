@@ -47,8 +47,7 @@ ingress:
               identifier: main
               port: http
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - readarr.jadogg.com
 
 persistence:

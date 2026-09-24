@@ -16,8 +16,7 @@ ingress:
       paths:
         - path: /
   tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
+    - hosts:
         - portainer.jadogg.com
 
 # 3. Persistence (Don't lose your admin password/settings)

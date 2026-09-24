@@ -11,8 +11,7 @@ ingress:
           - path: /
             pathType: Prefix
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - home.jadogg.com
 
 # 2. Permissions (Required for K8s widget)

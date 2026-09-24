@@ -16,8 +16,7 @@ server:
     hosts:
       - argocd.jadogg.com
     tls:
-      - secretName: argocd-server-tls # The cert we created natively earlier
-        hosts:
+      - hosts:
           - argocd.jadogg.com
 
 # Disable the internal TLS strictness so we don't need to restart pods on cert rotation
@@ -27,6 +26,5 @@ configs:
     server.insecure: true 
     repo.server.plaintext: false # Use default self-signed (encrypted but not verified)
     dex.server.plaintext: false # Use default self-signed
-
 
 

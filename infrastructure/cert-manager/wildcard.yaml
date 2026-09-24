@@ -5,7 +5,10 @@ metadata:
   name: jadogg-wildcard
   namespace: traefik # Store it where Traefik lives
 spec:
-  secretName: jadogg-wildcard-cert-v2 # Incrementing version to force refresh
+  # Keep this name stable; cert-manager renews the Secret in place.
+  secretName: jadogg-wildcard-cert-v2
+  # Renew 30 days before the normal 90-day Let's Encrypt expiry.
+  renewBefore: 720h
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

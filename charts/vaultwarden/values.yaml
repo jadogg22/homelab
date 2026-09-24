@@ -41,8 +41,7 @@ ingress:
               identifier: main
               port: http
     tls:
-      - secretName: jadogg-wildcard-cert
-        hosts:
+      - hosts:
           - vaultwarden.jadogg.com
 
 persistence:

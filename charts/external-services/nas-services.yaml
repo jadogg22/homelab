@@ -60,8 +60,7 @@ metadata:
 spec:
   ingressClassName: traefik
   tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
+    - hosts:
         - truenas.jadogg.com
         - jellyfin.jadogg.com
   rules:

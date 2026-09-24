@@ -54,8 +54,7 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
   tls:
-    - secretName: jadogg-wildcard-cert
-      hosts:
+    - hosts:
         - nextcloud.jadogg.com
   hosts:
     - host: nextcloud.jadogg.com

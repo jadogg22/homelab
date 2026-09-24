@@ -12,5 +12,5 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-  tls:
-    secretName: jadogg-wildcard-cert # <--- This links the cert we made earlier!
+  # Use Traefik's default TLSStore certificate.
+  tls: {}
