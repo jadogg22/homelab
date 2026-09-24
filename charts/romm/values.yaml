@@ -30,13 +30,13 @@ controllers:
             value: "2"
           - name: WEB_SERVER_CONCURRENCY
             value: "2"
-            - name: HASHEOUS_API_ENABLED
-              value: "true"
-            - name: ENABLE_RESCAN_ON_FILESYSTEM_CHANGE
-              value: "true"
-            - name: RESCAN_ON_FILESYSTEM_CHANGE_DELAY
-              value: "5"
-            resources:
+          - name: HASHEOUS_API_ENABLED
+            value: "true"
+          - name: ENABLE_RESCAN_ON_FILESYSTEM_CHANGE
+            value: "true"
+          - name: RESCAN_ON_FILESYSTEM_CHANGE_DELAY
+            value: "5"
+        resources:
           requests:
             cpu: 100m
             memory: 512Mi
